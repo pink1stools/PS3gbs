@@ -1,0 +1,18 @@
+﻿<?xml version='1.0' encoding='utf-8'?>
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="PS3_Game_Tool.Properties" GeneratedClassName="Settings">
+  <Profiles />
+  <Settings>
+    <Setting Name="pkg_folder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">/PKG</Value>
+    </Setting>
+    <Setting Name="iso_folder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">ISO</Value>
+    </Setting>
+    <Setting Name="game_folder" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Game Files</Value>
+    </Setting>
+    <Setting Name="color" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Crimson</Value>
+    </Setting>
+  </Settings>
+</SettingsFile>
