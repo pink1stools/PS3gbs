@@ -332,6 +332,15 @@ namespace PS3_Game_Tool
             appPath = appPath.Replace("PS3gbs.exe", "");
             pkg = appPath;
             //rename();
+
+            /*xDPx fix
+             PKG Folder check*/
+
+            if(!Directory.Exists(appPath + "/PKG"))
+            {
+                Directory.CreateDirectory(appPath + "/PKG");
+            }
+
             dinfo = new DirectoryInfo(appPath + "/PKG");
             //files = Directory.GetFiles(appPath, "*.pkg");
             Files = dinfo.GetFiles("*.pkg");
@@ -1160,6 +1169,81 @@ namespace PS3_Game_Tool
                     lvpkginfo.Items.Add(t1[n] + t );
                     n++;
                 }
+
+                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
+
+                #region << pkg2sfo >>
+
+                try
+                {
+                    //we need the item info 
+                    //mainly we need to items location
+
+                    /*This can be used to decrypt a pkg file*/
+                    PS3gbs.pkg2sfo PKGSFO = new PS3gbs.pkg2sfo();
+                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString());//get pkg name
+
+                    //this will actually decrypt the item so we will need to clean the folder after moving the sfo 
+                    //this could be cleaner also we can actually instead of exacting the pkg we could always load sfo from the buffer in the exact code but this will work for now
+                    if (Directory.Exists(appPath + @"\temp\pkg"))
+                    {
+                        if (!Directory.Exists("Work"))
+                        {
+                            //create working directory
+                            Directory.CreateDirectory("Work");
+                        }
+                        //copy sfo to working folder
+                        File.Copy(appPath + @"\temp\pkg\" + items2[0].ToString().Replace(".pkg", "") + @"\PARAM.SFO", appPath + @"\Work\PARAM.SFO", true);
+
+                        //Directory.Delete(appPath + @"\temp\pkg");
+                        DeleteDirectory(appPath + @"\temp\pkg");
+
+                        
+                    }
+                }
+                catch(Exception ex)
+                {
+                    //this will propably break the code might need to be tweaked a bit 
+                }
+
+                #region << PARAM.SFO >>
+
+                //this code will always work ! 
+                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(appPath + @"\Work\PARAM.SFO");
+                foreach (var psfoitem in sfo.Tables)
+                {
+                    lvpkgsfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
+                }
+
+                #endregion << PARAM.SFO >>
+
+                #endregion << pkg2sfo >> 
+
+            }
+        }
+        public static void DeleteDirectory(string target_dir)
+        {
+            try
+            {
+                string[] files = Directory.GetFiles(target_dir);
+                string[] dirs = Directory.GetDirectories(target_dir);
+
+                foreach (string file in files)
+                {
+                    File.SetAttributes(file, FileAttributes.Normal);
+                    File.Delete(file);
+                }
+
+                foreach (string dir in dirs)
+                {
+                    DeleteDirectory(dir);
+                }
+
+                Directory.Delete(target_dir, false);
+            }
+            catch(Exception ex)
+            {
+
             }
         }
     }
