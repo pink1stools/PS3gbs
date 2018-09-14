@@ -85,6 +85,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ConversionUtils.cs" />
     <Compile Include="Util\pkg2sfo.cs" />
     <Compile Include="Util\Util.cs" />
     <Page Include="downloader.xaml">

@@ -361,6 +361,29 @@ namespace PS3_Game_Tool
 
             foreach (FileInfo file in Files)
             {
+
+
+                /*string tname = file.Name.Replace(".pkg", "");
+                pkg PKGICO = new pkg();
+                PKGICO.read_header(file.FullName, "ICON0.PNG");
+                
+                pkg PKGSFO = new pkg();
+                PKGSFO.read_header(file.FullName, "PARAM.SFO");//get pkg name
+                
+                
+                if(File.Exists("PARAM.SFO"))
+                {
+                    File.Move("PARAM.SFO", "SFO/" + tname + ".SFO"); // Try to move
+
+                
+                if (File.Exists("ICON0.PNG"))
+                {
+                    File.Move("ICON0.PNG", "icons/" + tname +".PNG"); // Try to move
+
+                }}*/
+
+
+
                 FileStream pkgFilehead = File.Open(file.FullName, FileMode.Open);
                 byte[] testmagic = new byte[0x06];
                 //pkgFilehead.Seek(0x30, SeekOrigin.Begin);
@@ -1179,9 +1202,11 @@ namespace PS3_Game_Tool
                     //we need the item info 
                     //mainly we need to items location
 
-                    /*This can be used to decrypt a pkg file*/
+                    //This can be used to decrypt a pkg file*/
                     PS3gbs.pkg2sfo PKGSFO = new PS3gbs.pkg2sfo();
-                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString());//get pkg name
+                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString(), "PARAM.SFO");//get pkg name
+
+                    
 
                     //this will actually decrypt the item so we will need to clean the folder after moving the sfo 
                     //this could be cleaner also we can actually instead of exacting the pkg we could always load sfo from the buffer in the exact code but this will work for now
@@ -1192,6 +1217,7 @@ namespace PS3_Game_Tool
                             //create working directory
                             Directory.CreateDirectory("Work");
                         }
+                       
                         //copy sfo to working folder
                         File.Copy(appPath + @"\temp\pkg\" + items2[0].ToString().Replace(".pkg", "") + @"\PARAM.SFO", appPath + @"\Work\PARAM.SFO", true);
 
@@ -1210,6 +1236,7 @@ namespace PS3_Game_Tool
 
                 //this code will always work ! 
                 Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(appPath + @"\Work\PARAM.SFO");
+                lvpkgsfo.Items.Clear();
                 foreach (var psfoitem in sfo.Tables)
                 {
                     lvpkgsfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
