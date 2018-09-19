@@ -162,8 +162,82 @@ namespace PS3_Game_Tool
             textBox2.Text = iso_directory;
             textBox.Text = game_directory;
             //rss();
-            o_folder();
+            pkg_folder();
+
+            //Create Folders and Directories Used By the app
+            CreateBaseDirecotries();
+
+            //SetupFolderWatchers
+            SetupWatchers();
+
+
         }
+
+        private void SetupWatchers()
+        {
+            #region << PKG Watcher >>
+
+            FileSystemWatcher watcher = new FileSystemWatcher();
+            watcher.Path = appPath + pkg_directory;//iso path //pkg path //sfo path in working
+            watcher.NotifyFilter = NotifyFilters.LastWrite | NotifyFilters.FileName; //look for last time change
+            watcher.Filter = "*.*"; //filter extentions
+            watcher.Changed += delegate
+            {
+                pkg_folder();
+            }; //fire up the reload method
+            watcher.EnableRaisingEvents = true; //bviously xD
+
+            #endregion << PKG Watcher >>
+
+            #region << ISO Watcher >>
+
+            FileSystemWatcher iso_watcher = new FileSystemWatcher();
+            iso_watcher.Path = appPath + pkg_directory;//iso path //pkg path //sfo path in working
+            iso_watcher.NotifyFilter = NotifyFilters.LastWrite; //look for last time change
+            iso_watcher.Filter = "."; //filter extentions
+            iso_watcher.Changed += delegate
+            {
+                open_iso_folder();
+            }; //fire up the reload method
+            iso_watcher.EnableRaisingEvents = true; //Obviously xD
+
+            #endregion << ISO Watcher >>
+
+
+            #region << Game Watcher >>
+
+            FileSystemWatcher Game_watcher = new FileSystemWatcher();
+            Game_watcher.Path = appPath + pkg_directory;//iso path //pkg path //sfo path in working
+            Game_watcher.NotifyFilter = NotifyFilters.LastWrite; //look for last time change
+            Game_watcher.Filter = "."; //filter extentions
+            Game_watcher.Changed += delegate
+            {
+                open_game_folder();
+            }; //fire up the reload method
+            Game_watcher.EnableRaisingEvents = true; //Obviously xD
+
+            #endregion << Game Watcher >>
+
+
+        }
+
+        private void CreateBaseDirecotries()
+        {
+            if(!Directory.Exists(appPath + pkg_directory))
+            {
+                Directory.CreateDirectory(appPath + pkg_directory);
+            }
+            if (!Directory.Exists(appPath + iso_directory))
+            {
+                Directory.CreateDirectory(appPath + iso_directory);
+            }
+            //add misc folders here 
+            if (!Directory.Exists(appPath + game_directory))
+            {
+                Directory.CreateDirectory(appPath + game_directory);
+            }
+        }
+
 
         private void MetroWindow_Closing(object sender, CancelEventArgs e)
         {
@@ -307,7 +381,7 @@ namespace PS3_Game_Tool
         #endregion<<settings>>
 
         #region<<files>>
-        private void o_folder()
+        private void pkg_folder()
         {
             /*
             Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
@@ -320,6 +394,16 @@ namespace PS3_Game_Tool
             //dataGrid1sign.ItemsSource.
             //dt.Rows.Clear();
             dt2.Rows.Clear();
+
+            /*xDPx*/
+            //clean data context each time
+            System.Windows.Application.Current.Dispatcher.Invoke(
+            DispatcherPriority.Normal,
+(ThreadStart)delegate
+{
+    lbtest.DataContext = null;
+});
+
 
             //VisitPlanItems.DataContext = dt2.DefaultView;
             //extractIcons();
@@ -505,12 +589,13 @@ namespace PS3_Game_Tool
                         //tabItem5.
                         //VisitPlanItems.
                         //PKGList.DataContext = dtpkg2.DefaultView;
-
-                        //Launchpad.DataContext = dtpkg2.DefaultView;
-                        VisitPlanItems.DataContext = dtpkg2.DefaultView;
-                        lbtest.DataContext = dtpkg2.DefaultView;
-                        lvpkginfo.DataContext = dtpkg2.DefaultView;
-
+                        System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                        {
+                            //Launchpad.DataContext = dtpkg2.DefaultView;
+                            VisitPlanItems.DataContext = dtpkg2.DefaultView;
+                            lbtest.DataContext = dtpkg2.DefaultView;
+                            lvpkginfo.DataContext = dtpkg2.DefaultView;
+                        }));
 
                         //Thumbnails.Items.Add(new BitmapImage(new Uri(iconpath)));
                         //tile1[i] = new Tile();
@@ -1204,7 +1289,7 @@ namespace PS3_Game_Tool
 
                     //This can be used to decrypt a pkg file*/
                     PS3gbs.pkg2sfo PKGSFO = new PS3gbs.pkg2sfo();
-                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString(), "PARAM.SFO");//get pkg name
+                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString());//get pkg name
 
                     
 
