@@ -161,11 +161,21 @@ namespace PS3_Game_Tool
             textBox1.Text = pkg_directory;
             textBox2.Text = iso_directory;
             textBox.Text = game_directory;
-            //rss();
-            pkg_folder();
+
+            //set the app path correctly from initilizastion 
+            appPath = appPath.Replace("PS3gbs.exe", "");
 
             //Create Folders and Directories Used By the app
             CreateBaseDirecotries();
+
+            //rss();
+
+            //i would also reccomend running this in a seperate thread so we can boot the app and maybe even report progress
+            new Thread(delegate () 
+            {
+                pkg_folder();
+            }).Start();
+          
 
             //SetupFolderWatchers
             SetupWatchers();
@@ -231,6 +241,15 @@ namespace PS3_Game_Tool
             {
                 Directory.CreateDirectory(appPath + iso_directory);
             }
+            if(!Directory.Exists(appPath + "/SFO"))
+            {
+                Directory.CreateDirectory(appPath + "/SFO");
+            }
+            if(!Directory.Exists(appPath + "/icons"))
+            {
+                Directory.CreateDirectory(appPath + "/icons");
+            }
+
             //add misc folders here 
             if (!Directory.Exists(appPath + game_directory))
             {
@@ -238,6 +257,8 @@ namespace PS3_Game_Tool
             }
         }
 
+
+      
 
         private void MetroWindow_Closing(object sender, CancelEventArgs e)
         {
@@ -383,251 +404,297 @@ namespace PS3_Game_Tool
         #region<<files>>
         private void pkg_folder()
         {
-            /*
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+            try
             {
-                this.progress1.Visibility = Visibility.Visible;
-            }));*/
-            //set_load(true);
 
-            i = 0;
-            //dataGrid1sign.ItemsSource.
-            //dt.Rows.Clear();
-            dt2.Rows.Clear();
+                /*
+                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                {
+                    this.progress1.Visibility = Visibility.Visible;
+                }));*/
+                //set_load(true);
 
-            /*xDPx*/
-            //clean data context each time
-            System.Windows.Application.Current.Dispatcher.Invoke(
-            DispatcherPriority.Normal,
-(ThreadStart)delegate
-{
-    lbtest.DataContext = null;
-});
+                i = 0;
+                //dataGrid1sign.ItemsSource.
+                //dt.Rows.Clear();
+                dt2.Rows.Clear();
+                //should be wise to do this
+                dtpkg2.Clear();
+                /*xDPx*/
+                //clean data context each time
+                System.Windows.Application.Current.Dispatcher.Invoke(
+                DispatcherPriority.Normal,
+    (ThreadStart)delegate
+    {
+        lbtest.DataContext = null;
+
+        /*https://stackoverflow.com/a/22528015/3578728*/
+        
+    });
 
 
-            //VisitPlanItems.DataContext = dt2.DefaultView;
-            //extractIcons();
-            System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
-            {
+                //VisitPlanItems.DataContext = dt2.DefaultView;
+                //extractIcons();
+                System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                {
                 //this.image1.Visibility = Visibility.Collapsed;
                 //this.label6.Visibility = Visibility.Collapsed;
             }));
 
-            appPath = appPath.Replace("PS3gbs.exe", "");
-            pkg = appPath;
-            //rename();
+                appPath = appPath.Replace("PS3gbs.exe", "");
+                pkg = appPath;
+                //rename();
 
-            /*xDPx fix
-             PKG Folder check*/
+                /*xDPx fix
+                 PKG Folder check*/
 
-            if(!Directory.Exists(appPath + "/PKG"))
-            {
-                Directory.CreateDirectory(appPath + "/PKG");
+                if (!Directory.Exists(appPath + "/PKG"))
+                {
+                    Directory.CreateDirectory(appPath + "/PKG");
+                }
+
+                dinfo = new DirectoryInfo(appPath + "/PKG");
+                //files = Directory.GetFiles(appPath, "*.pkg");
+                Files = dinfo.GetFiles("*.pkg");
+                //string[] tempsubdirectoryEntries = Directory.GetDirectories(appPath);
+                int sr = 0;
+                // subdirectoryEntries = new string[tempsubdirectoryEntries.Length - 1];
+                foreach (string s in Directory.GetDirectories(appPath))
+                {
+                    if (sr <= 19 && s.Remove(0, appPath.Length) != "bin")
+                    {
+                        //subdirectoryEntries[sr] = s.Remove(0, appPath.Length);
+                        sr++;
+                    }
+                }
+                //subdirectoryEntries = Directory.GetDirectories(appPath);
+                // listBox2.ItemsSource = subdirectoryEntries;
+
+
+                foreach (FileInfo file in Files)
+                {
+                    try
+                    {
+
+                        string tname = file.Name.Replace(".pkg", "");
+                        if (!File.Exists("SFO/" + tname + ".SFO") && !File.Exists("icons/" + tname + ".PNG"))
+                        {
+
+
+
+                            pkg PKGICO = new pkg();
+                            PKGICO.read_header(file.FullName, "ICON0.PNG");
+
+                            pkg PKGSFO = new pkg();
+                            PKGSFO.read_header(file.FullName, "PARAM.SFO");//get pkg name
+
+                            if (File.Exists("PARAM.SFO"))
+                            {
+
+                                if (File.Exists("SFO/" + tname + ".SFO"))
+                                {
+
+                                    File.Delete("SFO/" + tname + ".SFO");
+                                }
+
+                                File.Move("PARAM.SFO", "SFO/" + tname + ".SFO"); // Try to move
+
+                            }
+                            if (File.Exists("ICON0.PNG"))
+                            {
+
+                                if (File.Exists("icons/" + tname + ".PNG"))
+                                {
+                                    File.Delete("icons/" + tname + ".PNG");
+                                }
+                                File.Move("ICON0.PNG", "icons/" + tname + ".PNG"); // Try to move
+
+                            }
+
+                        }
+
+
+                        FileStream pkgFilehead = File.Open(file.FullName, FileMode.Open);
+                        byte[] testmagic = new byte[0x05];
+                        //pkgFilehead.Seek(0x30, SeekOrigin.Begin);
+                        pkgFilehead.Read(testmagic, 0, 0x05);
+                        pkgFilehead.Close();
+                        byte[] magic1 = new byte[] { 0x7F, 0x50, 0x4B, 0x47, 0x00 };
+                        byte[] magic2 = new byte[] { 0x7F, 0x50, 0x4B, 0x47, 0x80 };
+                        string pkgtype;
+                        bool isdebug = testmagic.SequenceEqual(magic1);
+                        bool isretail = testmagic.SequenceEqual(magic2);
+                        if (isdebug == true)
+                        {
+                            pkgtype = "Debug ";
+                        }
+
+                        else if (isretail == true)
+                        {
+                            pkgtype = "Retail";
+                        }
+
+                        else
+                        {
+                            pkgtype = "";
+
+                        }
+
+                        if (pkgtype == "Retail")
+                        {
+                            byte[] data = new byte[0x80];
+                            byte[] result;
+                            byte[] testsha = new byte[0x08];
+
+
+                            FileStream pkgFilesha = File.Open(file.FullName, FileMode.Open);
+                            byte[] readsha = new byte[0x08];
+                            //pkgFilehead.Seek(0x30, SeekOrigin.Begin);
+                            pkgFilesha.Read(data, 0, 0x80);
+                            pkgFilesha.Seek(0xb8, SeekOrigin.Begin);
+                            pkgFilesha.Read(readsha, 0, 0x08);
+                            pkgFilesha.Close();
+
+
+                            SHA1 sha = new SHA1CryptoServiceProvider();
+                            // This is one implementation of the abstract class SHA1.
+                            result = sha.ComputeHash(data);
+                            Buffer.BlockCopy(result, 12, testsha, 0, 8);
+
+                            bool ishan = !readsha.SequenceEqual(testsha);
+                            if (ishan == true)
+                            {
+                                pkgtype = "HAN   ";
+                            }
+                        }
+
+                        if (pkgtype != "")
+                        {
+                            s = file.ToString();
+                            if (s != "Package_List.pkg")
+                            {
+                                s = s.Replace("&", "and");
+
+                                FileStream pkgFile = File.Open(file.FullName, FileMode.Open);
+                                byte[] cid = new byte[0x30];
+                                pkgFile.Seek(0x30, SeekOrigin.Begin);
+                                pkgFile.Read(cid, 0, 0x30);
+                                pkgFile.Close();
+                                scid = Encoding.ASCII.GetString(cid);
+                                int index = scid.IndexOf("\0");
+                                if (index > 0)
+                                    scid = scid.Substring(0, index);
+                                string sz = SizeSuffix(file.Length);
+                                s = file.ToString();
+
+                                if (s != "")
+                                {
+                                    DataRow dr1 = dtpkg.NewRow();
+                                    dr1["IsSelected"] = false;
+                                    dr1["Name"] = s;
+                                    dr1["CID"] = scid;
+                                    dr1["type"] = pkgtype;
+                                    dr1["Size"] = sz;
+                                    dtpkg.Rows.Add(dr1);
+                                }
+                                //dt.Rows.Add("false"+"    " + s, "      " + scid + "      ", "      " + pkgtype + "      ", "   " + sz);
+                                //tabItem5.
+                                //dataGrid1.DataContext = dtpkg.DefaultView;
+                                //dataGrid1sign.DataContext = dtpkg.DefaultView;
+                                //g1.Children.Add
+                                //dataGrid2.DataContext = dtpkg.DefaultView;
+
+                                string iconpath = s.Replace(".pkg", ".PNG");
+                                iconpath = appPath + "icons/" + iconpath;
+                                if (!File.Exists(iconpath))
+                                {
+                                    iconpath = appPath + "tools/icons/download.png";
+                                }
+
+                                DataRow dr = dtpkg2.NewRow();
+                                dr["Name"] = s;
+                                dr["CID"] = scid;
+                                dr["type"] = pkgtype;
+                                dr["size"] = sz;
+                                dr["icon"] = iconpath;
+                                dr["tool"] = "  " + s + "  " + scid + "  " + sz;
+                                dr["count"] = i;
+                                dr["bl"] = "0.0";
+                                dr["tileh"] = "50";
+                                dr["tilew"] = "800";
+                                dr["column1w"] = "150";
+                                dr["column2w"] = "650";
+                                dr["roww"] = "25";
+                                dr["imags"] = "50";
+                                dr["text1s"] = "16";
+                                dr["text2s"] = "12";
+                                dtpkg2.Rows.Add(dr);
+
+
+                                //dt.Rows.Add("    " + s, "      " + scid + "      ", "      " + pkgtype + "      ", "   " + sz + "      ","icon.png");
+                                //tabItem5.
+                                //VisitPlanItems.
+                                //PKGList.DataContext = dtpkg2.DefaultView;
+
+                                //Launchpad.DataContext = dtpkg2.DefaultView;
+
+                                //Thumbnails.Items.Add(new BitmapImage(new Uri(iconpath)));
+                                //tile1[i] = new Tile();
+                                i++;
+                            }
+
+                        }
+
+
+                    }
+                    catch (Exception ex)
+                    {
+                        //invalid pkg or invalid item 
+                    }
+
+
+                }
+
+                System.Windows.Application.Current.Dispatcher.Invoke(
+                               DispatcherPriority.Normal,
+                               (ThreadStart)delegate
+                               {
+                                   try
+                                   {
+                                       //i think its a safer bet to remove data context before adding into to it
+                                       VisitPlanItems.DataContext = null;
+                                       lbtest.DataContext = null;
+                                       lvpkginfo.DataContext = null;
+
+                                       VisitPlanItems.DataContext = dtpkg2.DefaultView;
+                                       lbtest.DataContext = dtpkg2.DefaultView;
+                                       lvpkginfo.DataContext = dtpkg2.DefaultView;
+
+                                       /*Add a refresh item 
+                                         Since we are running another thread call the refresh method
+                                        */
+                                       VisitPlanItems.Items.Refresh();
+                                       lbtest.Items.Refresh();
+                                       lvpkginfo.Items.Refresh();
+                                   }
+                                   catch(Exception ex)
+                                   {
+
+                                   }
+                               });
+
+                //set_load(false);
+                /*
+                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                {
+                    this.progress1.Visibility = Visibility.Collapsed;
+                }));*/
+
             }
-
-            dinfo = new DirectoryInfo(appPath + "/PKG");
-            //files = Directory.GetFiles(appPath, "*.pkg");
-            Files = dinfo.GetFiles("*.pkg");
-            //string[] tempsubdirectoryEntries = Directory.GetDirectories(appPath);
-            int sr = 0;
-            // subdirectoryEntries = new string[tempsubdirectoryEntries.Length - 1];
-            foreach (string s in Directory.GetDirectories(appPath))
+            catch(Exception ex)
             {
-                if (sr <= 19 && s.Remove(0, appPath.Length) != "bin")
-                {
-                    //subdirectoryEntries[sr] = s.Remove(0, appPath.Length);
-                    sr++;
-                }
+                /*added a try catch for this enitire method as well as something is causing it to fall over on some of the pkg's i tested */
             }
-            //subdirectoryEntries = Directory.GetDirectories(appPath);
-            // listBox2.ItemsSource = subdirectoryEntries;
-
-
-            foreach (FileInfo file in Files)
-            {
-
-
-                string tname = file.Name.Replace(".pkg", "");
-                if (!File.Exists("SFO/" + tname + ".SFO") && !File.Exists("icons/" + tname + ".PNG"))
-                {
-
-
-
-                    pkg PKGICO = new pkg();
-                    PKGICO.read_header(file.FullName, "ICON0.PNG");
-
-                    pkg PKGSFO = new pkg();
-                    PKGSFO.read_header(file.FullName, "PARAM.SFO");//get pkg name
-
-                    if (File.Exists("PARAM.SFO"))
-                    {
-
-                        if (File.Exists("SFO/" + tname + ".SFO"))
-                        {
-
-                            File.Delete("SFO/" + tname + ".SFO");
-                        }
-
-                        File.Move("PARAM.SFO", "SFO/" + tname + ".SFO"); // Try to move
-
-                    }
-                    if (File.Exists("ICON0.PNG"))
-                    {
-
-                        if (File.Exists("icons/" + tname + ".PNG"))
-                        {
-                            File.Delete("icons/" + tname + ".PNG");
-                        }
-                        File.Move("ICON0.PNG", "icons/" + tname + ".PNG"); // Try to move
-
-                    }
-
-                }
-
-
-                FileStream pkgFilehead = File.Open(file.FullName, FileMode.Open);
-                byte[] testmagic = new byte[0x05];
-                //pkgFilehead.Seek(0x30, SeekOrigin.Begin);
-                pkgFilehead.Read(testmagic, 0, 0x05);
-                pkgFilehead.Close();
-                byte[] magic1 = new byte[] { 0x7F, 0x50, 0x4B, 0x47, 0x00 };
-                byte[] magic2 = new byte[] { 0x7F, 0x50, 0x4B, 0x47, 0x80 };
-                string pkgtype;
-                bool isdebug = testmagic.SequenceEqual(magic1);
-                bool isretail = testmagic.SequenceEqual(magic2);
-                if (isdebug == true)
-                {
-                    pkgtype = "Debug ";
-                }
-
-                else if (isretail == true)
-                {
-                    pkgtype = "Retail";
-                }
-
-                else
-                {
-                    pkgtype = "";
-
-                }
-
-                if (pkgtype == "Retail")
-                {
-                    byte[] data = new byte[0x80];
-                    byte[] result;
-                    byte[] testsha = new byte[0x08];
-
-
-                    FileStream pkgFilesha = File.Open(file.FullName, FileMode.Open);
-                    byte[] readsha = new byte[0x08];
-                    //pkgFilehead.Seek(0x30, SeekOrigin.Begin);
-                    pkgFilesha.Read(data, 0, 0x80);
-                    pkgFilesha.Seek(0xb8, SeekOrigin.Begin);
-                    pkgFilesha.Read(readsha, 0, 0x08);
-                    pkgFilesha.Close();
-
-
-                    SHA1 sha = new SHA1CryptoServiceProvider();
-                    // This is one implementation of the abstract class SHA1.
-                    result = sha.ComputeHash(data);
-                    Buffer.BlockCopy(result, 12, testsha, 0, 8);
-
-                    bool ishan = !readsha.SequenceEqual(testsha);
-                    if (ishan == true)
-                    {
-                        pkgtype = "HAN   ";
-                    }
-                }
-
-                if (pkgtype != "")
-                {
-                    s = file.ToString();
-                    if (s != "Package_List.pkg")
-                    {
-                        s = s.Replace("&", "and");
-
-                        FileStream pkgFile = File.Open(file.FullName, FileMode.Open);
-                        byte[] cid = new byte[0x30];
-                        pkgFile.Seek(0x30, SeekOrigin.Begin);
-                        pkgFile.Read(cid, 0, 0x30);
-                        pkgFile.Close();
-                        scid = Encoding.ASCII.GetString(cid);
-                        int index = scid.IndexOf("\0");
-                        if (index > 0)
-                            scid = scid.Substring(0, index);
-                        string sz = SizeSuffix(file.Length);
-                        s = file.ToString();
-
-                        if (s != "")
-                        {
-                            DataRow dr1 = dtpkg.NewRow();
-                            dr1["IsSelected"] = false;
-                            dr1["Name"] = s;
-                            dr1["CID"] = scid;
-                            dr1["type"] = pkgtype;
-                            dr1["Size"] = sz;
-                            dtpkg.Rows.Add(dr1);
-                        }
-                        //dt.Rows.Add("false"+"    " + s, "      " + scid + "      ", "      " + pkgtype + "      ", "   " + sz);
-                        //tabItem5.
-                        //dataGrid1.DataContext = dtpkg.DefaultView;
-                        //dataGrid1sign.DataContext = dtpkg.DefaultView;
-                        //g1.Children.Add
-                        //dataGrid2.DataContext = dtpkg.DefaultView;
-
-                        string iconpath = s.Replace(".pkg", ".PNG");
-                        iconpath = appPath + "icons/" + iconpath;
-                        if (!File.Exists(iconpath))
-                        {
-                            iconpath = appPath + "tools/icons/download.png";
-                        }
-
-                        DataRow dr = dtpkg2.NewRow();
-                        dr["Name"] = s;
-                        dr["CID"] = scid;
-                        dr["type"] = pkgtype;
-                        dr["size"] = sz;
-                        dr["icon"] = iconpath;
-                        dr["tool"] = "  " + s + "  " + scid + "  " + sz;
-                        dr["count"] = i;
-                        dr["bl"] = "0.0";
-                        dr["tileh"] = "50";
-                        dr["tilew"] = "800";
-                        dr["column1w"] = "150";
-                        dr["column2w"] = "650";
-                        dr["roww"] = "25";
-                        dr["imags"] = "50";
-                        dr["text1s"] = "16";
-                        dr["text2s"] = "12";
-                        dtpkg2.Rows.Add(dr);
-
-
-                        //dt.Rows.Add("    " + s, "      " + scid + "      ", "      " + pkgtype + "      ", "   " + sz + "      ","icon.png");
-                        //tabItem5.
-                        //VisitPlanItems.
-                        //PKGList.DataContext = dtpkg2.DefaultView;
-
-                        //Launchpad.DataContext = dtpkg2.DefaultView;
-                        VisitPlanItems.DataContext = dtpkg2.DefaultView;
-                        lbtest.DataContext = dtpkg2.DefaultView;
-                        lvpkginfo.DataContext = dtpkg2.DefaultView;
-
-
-                        //Thumbnails.Items.Add(new BitmapImage(new Uri(iconpath)));
-                        //tile1[i] = new Tile();
-                        i++;
-                    }
-
-                }
-
-            }
-
-            //set_load(false);
-            /*
-            Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
-            {
-                this.progress1.Visibility = Visibility.Collapsed;
-            }));*/
         }
 
         private void open_iso_folder()
