@@ -8,7 +8,7 @@
         xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
         x:Class="PS3_Game_Tool.MainWindow"
         mc:Ignorable="d"
-        Loaded="MetroWindow_Loaded" Closing="MetroWindow_Closing"  Height="600" Width="1000" >
+        Loaded="MetroWindow_Loaded" Closing="MetroWindow_Closing"  Height="647" Width="1000" >
 
 
     <Controls:MetroWindow.LeftWindowCommands>
@@ -37,9 +37,13 @@
 
 
     <Grid>
-        
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="223*"/>
+            <ColumnDefinition Width="25*"/>
+        </Grid.ColumnDefinitions>
 
-        <Controls:MetroTabControl Visibility="Visible" x:Name="metroAnimatedTabControl" Margin="0,10,0,0">
+
+        <Controls:MetroTabControl Visibility="Visible" x:Name="metroAnimatedTabControl" Margin="0,10,0,0" Grid.ColumnSpan="2">
 
             <TabItem Header="PKG List">
                 <TabItem.HeaderTemplate>
@@ -63,11 +67,11 @@
 
                 <Grid Visibility="Visible">
                     <Grid.Background>
-                        
+
                         <VisualBrush>
                             <VisualBrush.Visual>
                                 <Grid ClipToBounds="True">
-                                    <Image Source="tools/PS3GBS - background all v01.png">
+                                    <Image Source="tools/PS3GBS.png">
                                         <Image.Effect>
                                             <BlurEffect Radius="0"/>
                                         </Image.Effect>
@@ -81,24 +85,184 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <ListBox Name="lbtest" Grid.Column="0" SelectionChanged="lbtest_SelectionChanged" Width="200" 
-                      ItemsSource="{Binding}" HorizontalAlignment="Left">
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
+                    <Border Grid.Column="0" BorderThickness="1"  BorderBrush="{DynamicResource AccentColorBrush}">
+                        <ListBox Name="lbtest" Grid.Column="0" SelectionChanged="lbtest_SelectionChanged"   Width="200" 
+                      ItemsSource="{Binding}" HorizontalAlignment="Left" FlowDirection="RightToLeft" Background="Transparent" BorderThickness="0" >
 
-                                <StackPanel x:Name="plist"  MouseLeftButtonUp="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
 
-                                    <Image Height="100" Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <!-- <TextBox Width="180" Text="{Binding CID}" BorderThickness="0" IsReadOnly="True"/>
+
+                            <ListBox.ItemContainerStyle>
+                                <!--<Style TargetType="ListBoxItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.SelectedForegroundBrush), Mode=OneWay}" />
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.SelectedBackgroundBrush), Mode=OneWay}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                    </Trigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsSelected" Value="True" />
+                                            <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.ActiveSelectionForegroundBrush), Mode=OneWay}" />
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.ActiveSelectionBackgroundBrush), Mode=OneWay}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                    </MultiTrigger>
+
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsMouseOver" Value="True" />
+                                            <Condition Property="IsSelected" Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverSelectedBackgroundBrush), Mode=OneWay}" />
+                                    </MultiTrigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsMouseOver" Value="True" />
+                                            <Condition Property="IsSelected" Value="False" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverBackgroundBrush), Mode=OneWay}" />
+                                    </MultiTrigger>
+
+                                </Style.Triggers>
+                                </Style>-->
+
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.DisabledForegroundBrush" Value="{DynamicResource GrayNormalBrush}" />
+                                    <Setter Property="Controls:ItemHelper.DisabledSelectedBackgroundBrush" Value="{DynamicResource GrayBrush7}" />
+                                    <Setter Property="Controls:ItemHelper.DisabledSelectedForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource AccentColorBrush3}" />
+                                    <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush2}" />
+                                    <Setter Property="Controls:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="MinHeight" Value="25" />
+                                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                <Border x:Name="Border"
+                                               Background="Transparent"
+                                               BorderBrush="{TemplateBinding  BorderBrush}"
+                                               BorderThickness="{TemplateBinding BorderThickness}"
+                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                    <Grid>
+                                                        <GridViewRowPresenter x:Name="PART_RowPresenter"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                              Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              Visibility="Collapsed" />
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="GridView.ColumnCollection" Value="{x:Null}">
+                                                        <Setter TargetName="PART_ContentPresenter" Property="Visibility" Value="Visible" />
+                                                        <Setter TargetName="PART_RowPresenter" Property="Visibility" Value="Collapsed" />
+                                                    </Trigger>
+
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.SelectedForegroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.SelectedBackgroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                                    </Trigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsSelected" Value="True" />
+                                                            <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.ActiveSelectionForegroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.ActiveSelectionBackgroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                                    </MultiTrigger>
+
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverSelectedBackgroundBrush), Mode=OneWay}" />
+                                                    </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="IsSelected" Value="False" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverBackgroundBrush), Mode=OneWay}" />
+                                                    </MultiTrigger>
+
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledForegroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledBackgroundBrush), Mode=OneWay}" />
+                                                    </Trigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsEnabled" Value="False" />
+                                                            <Condition Property="IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <MultiTrigger.Setters>
+                                                            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledSelectedForegroundBrush), Mode=OneWay}" />
+                                                            <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledSelectedBackgroundBrush), Mode=OneWay}" />
+                                                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource GrayBrush7}" />
+                                                        </MultiTrigger.Setters>
+                                                    </MultiTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+
+
+                            <ListBox.ItemTemplate >
+                                <DataTemplate>
+                                    <Border MouseEnter="plist_MouseEnter" MouseLeave="plist_MouseExit">
+
+                                        <StackPanel x:Name="plist" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
+
+                                            <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+
+                                            <TextBlock  Width="180" Text="{Binding CID}" Grid.Row="2" FontSize="12" Name="txtScrolling">
+                                                <TextBlock.RenderTransform>
+                                                    <TranslateTransform x:Name="translate" />
+                                                </TextBlock.RenderTransform>
+                                                <TextBlock.Triggers>
+                                                    <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                        <BeginStoryboard>
+                                                            <Storyboard RepeatBehavior="Forever">
+                                                                <DoubleAnimation
+                                                                 From="120" To="-12"
+                                                                 Storyboard.TargetName="translate"
+                                                                 Storyboard.TargetProperty="X"
+                                                                 Duration="0:0:10" />
+                                                            </Storyboard>
+                                                        </BeginStoryboard>
+                                                    </EventTrigger>
+                                                </TextBlock.Triggers> 
+                                            </TextBlock>
+
+                                           <!-- <TextBox Width="180" Text="{Binding CID}" BorderThickness="0" Background="Transparent" IsReadOnly="True"/>
                             -->
-                                </StackPanel>
+                                        </StackPanel>
+                                    </Border>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
 
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
                     <GroupBox x:Name="groupBoxpkginfo" Grid.Column="1" Header="PKG Info" HorizontalAlignment="Center" Height="147" Margin="0,20,0,0" VerticalAlignment="Top" Width="549">
-                        <!--<Label x:Name="label4" Content="" Grid.Column="1" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="24"/>
-                      -->
+                     
                         <ListView Name="lvpkginfo" Background="Transparent" FontFamily="Arial" >
                             <ListBox.ItemsPanel>
                                 <ItemsPanelTemplate>
@@ -124,24 +288,87 @@
 
                     </GroupBox>
                     <GroupBox x:Name="groupBoxpkgtools" Grid.Column="1" Header="PKG Tools" HorizontalAlignment="Center" Margin="462,184,122,0" VerticalAlignment="Top" Width="208" MinHeight="200">
-                        <UniformGrid MinHeight="200">
-                        <Button x:Name="button"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="92">
-                            <DockPanel LastChildFill="True">
-                                <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                        <ListBox Background="Transparent">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Style>
+
+                            </ListBox.ItemContainerStyle>
+
+
+                            <Button x:Name="button_Copy"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
+                                <DockPanel LastChildFill="True">
+                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
                                             <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>-->
-                                <TextBlock VerticalAlignment="Center"
-                                       Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
-                                       FontSize="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=FontSize}"
-                                       >
-                                        Extract PKG
-                                </TextBlock>
+                                    <TextBlock VerticalAlignment="Center"
+                                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                    FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                       ><Run Text="Extract PKG"/></TextBlock>
 
-                            </DockPanel>
-                        </Button>
-                       </UniformGrid>
+                                </DockPanel>
+                            </Button>
+                            <Button x:Name="button_Copy2"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
+                                <DockPanel LastChildFill="True">
+                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>-->
+                                    <TextBlock VerticalAlignment="Center"
+                                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                    FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                       ><Run Text="Edit sfo"/></TextBlock>
+
+                                </DockPanel>
+                            </Button>
+                            <Button x:Name="button_Copy3"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
+                                <DockPanel LastChildFill="True">
+                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>-->
+                                    <TextBlock VerticalAlignment="Center"
+                                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                    FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                       ><Run Text="Check Updates"/></TextBlock>
+
+                                </DockPanel>
+                            </Button>
+                            <Button x:Name="button_Copy4"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
+                                <DockPanel LastChildFill="True">
+                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>-->
+                                    <TextBlock VerticalAlignment="Center"
+                                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                    FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                       ><Run Text="Refresh PKG"/></TextBlock>
+
+                                </DockPanel>
+                            </Button>
+                            <Button x:Name="button_Copy5"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
+                                <DockPanel LastChildFill="True">
+                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>-->
+                                    <TextBlock VerticalAlignment="Center"
+                                    Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                    FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                       ><Run Text="Refresh List"/></TextBlock>
+
+                                </DockPanel>
+                            </Button>
+
+                        </ListBox>
 
                     </GroupBox>
 
@@ -316,7 +543,7 @@
                         <VisualBrush>
                             <VisualBrush.Visual>
                                 <Grid ClipToBounds="True">
-                                    <Image Source="tools/PS3GBS - background all v01.png">
+                                    <Image Source="tools/PS3GBS.png">
                                         <Image.Effect>
                                             <BlurEffect Radius="0"/>
                                         </Image.Effect>
@@ -330,9 +557,147 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <ListBox Name="lbisotest" Grid.Column="0" SelectionChanged="lbtest_SelectionChanged" Width="200" 
+                    <Border Grid.Column="0" BorderThickness="1"  BorderBrush="{DynamicResource AccentColorBrush}">
+
+                        <ListBox Name="lbisotest" Background="Transparent" Grid.Column="0" SelectionChanged="lbtest_SelectionChanged" Width="200" 
                       ItemsSource="{Binding}" HorizontalAlignment="Left">
-                        <ListBox.ItemTemplate>
+
+
+                            <ListBox.ItemContainerStyle>
+                                <!--<Style TargetType="ListBoxItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.SelectedForegroundBrush), Mode=OneWay}" />
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.SelectedBackgroundBrush), Mode=OneWay}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                    </Trigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsSelected" Value="True" />
+                                            <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.ActiveSelectionForegroundBrush), Mode=OneWay}" />
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.ActiveSelectionBackgroundBrush), Mode=OneWay}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                    </MultiTrigger>
+
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsMouseOver" Value="True" />
+                                            <Condition Property="IsSelected" Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverSelectedBackgroundBrush), Mode=OneWay}" />
+                                    </MultiTrigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsMouseOver" Value="True" />
+                                            <Condition Property="IsSelected" Value="False" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverBackgroundBrush), Mode=OneWay}" />
+                                    </MultiTrigger>
+
+                                </Style.Triggers>
+                                </Style>-->
+
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.DisabledForegroundBrush" Value="{DynamicResource GrayNormalBrush}" />
+                                    <Setter Property="Controls:ItemHelper.DisabledSelectedBackgroundBrush" Value="{DynamicResource GrayBrush7}" />
+                                    <Setter Property="Controls:ItemHelper.DisabledSelectedForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource AccentColorBrush3}" />
+                                    <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush2}" />
+                                    <Setter Property="Controls:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="MinHeight" Value="25" />
+                                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                <Border x:Name="Border"
+                                               Background="Transparent"
+                                               BorderBrush="{TemplateBinding  BorderBrush}"
+                                               BorderThickness="{TemplateBinding BorderThickness}"
+                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                    <Grid>
+                                                        <GridViewRowPresenter x:Name="PART_RowPresenter"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                                        <ContentPresenter x:Name="PART_ContentPresenter"
+                                              Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              Visibility="Collapsed" />
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="GridView.ColumnCollection" Value="{x:Null}">
+                                                        <Setter TargetName="PART_ContentPresenter" Property="Visibility" Value="Visible" />
+                                                        <Setter TargetName="PART_RowPresenter" Property="Visibility" Value="Collapsed" />
+                                                    </Trigger>
+
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.SelectedForegroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.SelectedBackgroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                                    </Trigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsSelected" Value="True" />
+                                                            <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.ActiveSelectionForegroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.ActiveSelectionBackgroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                                    </MultiTrigger>
+
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverSelectedBackgroundBrush), Mode=OneWay}" />
+                                                    </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="IsSelected" Value="False" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverBackgroundBrush), Mode=OneWay}" />
+                                                    </MultiTrigger>
+
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledForegroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledBackgroundBrush), Mode=OneWay}" />
+                                                    </Trigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsEnabled" Value="False" />
+                                                            <Condition Property="IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <MultiTrigger.Setters>
+                                                            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledSelectedForegroundBrush), Mode=OneWay}" />
+                                                            <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledSelectedBackgroundBrush), Mode=OneWay}" />
+                                                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource GrayBrush7}" />
+                                                        </MultiTrigger.Setters>
+                                                    </MultiTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                </Style>
+                            </ListBox.ItemContainerStyle>
+
+
+                            <ListBox.ItemTemplate>
                             <DataTemplate>
 
                                 <StackPanel x:Name="plist"  MouseLeftButtonUp="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
@@ -345,6 +710,8 @@
                             </DataTemplate>
                         </ListBox.ItemTemplate>
                     </ListBox>
+                   </Border>
+                    
                     <GroupBox x:Name="groupBoxisoinfo" Grid.Column="1" Header="ISO Info" HorizontalAlignment="Center" Height="147" Margin="0,20,0,0" VerticalAlignment="Top" Width="549">
                         <!--<Label x:Name="label4" Content="" Grid.Column="1" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="24"/>
                       -->
@@ -515,8 +882,143 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <ListBox Name="lbgametest" Grid.Column="0" SelectionChanged="lbtest_SelectionChanged" Width="200" 
+                    <ListBox Name="lbgametest" Background="Transparent" Grid.Column="0" SelectionChanged="lbtest_SelectionChanged" Width="200" 
                       ItemsSource="{Binding}" HorizontalAlignment="Left">
+
+
+                        <ListBox.ItemContainerStyle>
+                            <!--<Style TargetType="ListBoxItem">
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsSelected" Value="True">
+                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.SelectedForegroundBrush), Mode=OneWay}" />
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.SelectedBackgroundBrush), Mode=OneWay}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                    </Trigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsSelected" Value="True" />
+                                            <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.ActiveSelectionForegroundBrush), Mode=OneWay}" />
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.ActiveSelectionBackgroundBrush), Mode=OneWay}" />
+                                        <Setter Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                    </MultiTrigger>
+
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsMouseOver" Value="True" />
+                                            <Condition Property="IsSelected" Value="True" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverSelectedBackgroundBrush), Mode=OneWay}" />
+                                    </MultiTrigger>
+                                    <MultiTrigger>
+                                        <MultiTrigger.Conditions>
+                                            <Condition Property="IsMouseOver" Value="True" />
+                                            <Condition Property="IsSelected" Value="False" />
+                                        </MultiTrigger.Conditions>
+                                        <Setter Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverBackgroundBrush), Mode=OneWay}" />
+                                    </MultiTrigger>
+
+                                </Style.Triggers>
+                                </Style>-->
+
+                            <Style TargetType="{x:Type ListBoxItem}">
+                                <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                <Setter Property="BorderThickness" Value="0" />
+                                <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush}" />
+                                <Setter Property="Controls:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                <Setter Property="Controls:ItemHelper.DisabledForegroundBrush" Value="{DynamicResource GrayNormalBrush}" />
+                                <Setter Property="Controls:ItemHelper.DisabledSelectedBackgroundBrush" Value="{DynamicResource GrayBrush7}" />
+                                <Setter Property="Controls:ItemHelper.DisabledSelectedForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource AccentColorBrush3}" />
+                                <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush}" />
+                                <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush2}" />
+                                <Setter Property="Controls:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                <Setter Property="Margin" Value="0" />
+                                <Setter Property="MinHeight" Value="25" />
+                                <Setter Property="SnapsToDevicePixels" Value="True" />
+                                <Setter Property="Template">
+                                    <Setter.Value>
+                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                            <Border x:Name="Border"
+                                               Background="Transparent"
+                                               BorderBrush="{TemplateBinding  BorderBrush}"
+                                               BorderThickness="{TemplateBinding BorderThickness}"
+                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
+                                                <Grid>
+                                                    <GridViewRowPresenter x:Name="PART_RowPresenter"
+                                                  VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                                  SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
+                                                    <ContentPresenter x:Name="PART_ContentPresenter"
+                                              Margin="{TemplateBinding Padding}"
+                                              HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
+                                              VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
+                                              SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
+                                              Visibility="Collapsed" />
+                                                </Grid>
+                                            </Border>
+                                            <ControlTemplate.Triggers>
+                                                <Trigger Property="GridView.ColumnCollection" Value="{x:Null}">
+                                                    <Setter TargetName="PART_ContentPresenter" Property="Visibility" Value="Visible" />
+                                                    <Setter TargetName="PART_RowPresenter" Property="Visibility" Value="Collapsed" />
+                                                </Trigger>
+
+                                                <Trigger Property="IsSelected" Value="True">
+                                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.SelectedForegroundBrush), Mode=OneWay}" />
+                                                    <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.SelectedBackgroundBrush), Mode=OneWay}" />
+                                                    <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                                </Trigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsSelected" Value="True" />
+                                                        <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.ActiveSelectionForegroundBrush), Mode=OneWay}" />
+                                                    <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.ActiveSelectionBackgroundBrush), Mode=OneWay}" />
+                                                    <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                                </MultiTrigger>
+
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True" />
+                                                        <Condition Property="IsSelected" Value="True" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverSelectedBackgroundBrush), Mode=OneWay}" />
+                                                </MultiTrigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsMouseOver" Value="True" />
+                                                        <Condition Property="IsSelected" Value="False" />
+                                                    </MultiTrigger.Conditions>
+                                                    <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverBackgroundBrush), Mode=OneWay}" />
+                                                </MultiTrigger>
+
+                                                <Trigger Property="IsEnabled" Value="False">
+                                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledForegroundBrush), Mode=OneWay}" />
+                                                    <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledBackgroundBrush), Mode=OneWay}" />
+                                                </Trigger>
+                                                <MultiTrigger>
+                                                    <MultiTrigger.Conditions>
+                                                        <Condition Property="IsEnabled" Value="False" />
+                                                        <Condition Property="IsSelected" Value="True" />
+                                                    </MultiTrigger.Conditions>
+                                                    <MultiTrigger.Setters>
+                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledSelectedForegroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledSelectedBackgroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource GrayBrush7}" />
+                                                    </MultiTrigger.Setters>
+                                                </MultiTrigger>
+                                            </ControlTemplate.Triggers>
+                                        </ControlTemplate>
+                                    </Setter.Value>
+                                </Setter>
+                                <Setter Property="VerticalContentAlignment" Value="Center" />
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+
                         <ListBox.ItemTemplate>
                             <DataTemplate>
 
@@ -659,7 +1161,7 @@
 
 
                 </Grid>-->
-                
+
             </TabItem>
 
 
@@ -686,7 +1188,7 @@
                         <VisualBrush>
                             <VisualBrush.Visual>
                                 <Grid ClipToBounds="True">
-                                    <Image Source="tools/PS3GBS - background all v01.png">
+                                    <Image Source="tools/PS3GBS.png">
                                         <Image.Effect>
                                             <BlurEffect Radius="0"/>
                                         </Image.Effect>
@@ -697,101 +1199,101 @@
                     </Grid.Background>
 
                     <Grid Margin="10,10,0,-3">
-                        
+
                         <Button Content="test" Click="Button_Click_2" Margin="690,49,0,0" Width="120" Height="20" HorizontalAlignment="Left" VerticalAlignment="Top" Visibility="Hidden"/>
-                            <Button x:Name="buttonud" HorizontalAlignment="Left" Margin="328,40,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.505,0.15" Style="{StaticResource AccentedSquareButtonStyle}"  Click="buttonud_Click">
-                                <DockPanel LastChildFill="True">
-                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                        <Button x:Name="buttonud" HorizontalAlignment="Left" Margin="328,40,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.505,0.15" Style="{StaticResource AccentedSquareButtonStyle}"  Click="buttonud_Click">
+                            <DockPanel LastChildFill="True">
+                                <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
                                             <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>-->
-                                    <TextBlock VerticalAlignment="Center"
+                                <TextBlock VerticalAlignment="Center"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                        FontSize="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=FontSize}"
                                        >
                                         Check for Updates
-                                    </TextBlock>
+                                </TextBlock>
 
-                                </DockPanel>
-                            </Button>
+                            </DockPanel>
+                        </Button>
 
-                            <Label x:Name="labelud" Content="Title ID" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.523,0.038"/>
-
-
-                            <TextBox Text="BLUS31156" x:Name="textBoxud"  PreviewDragOver="textBox1_PreviewDragOver" PreviewDrop="textBox1_PreviewDrop" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="70" MaxLength="16" IsUndoEnabled="False"/>
+                        <Label x:Name="labelud" Content="Title ID" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.523,0.038"/>
 
 
-                            <DataGrid x:Name="dataGrid" Background="Transparent" Margin="0,112,0,0" HeadersVisibility="Column" ItemsSource="{Binding}" IsReadOnly="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" GridLinesVisibility="None">
-                            
-                                <DataGrid.RowStyle>
-                                    <Style TargetType="DataGridRow">
-                                        <Setter Property="FontSize" Value="14"/>
-                                        <Setter Property="FontFamily" Value="Arial"/>
-                                        <Setter Property="FontWeight" Value="Bold"/>
-                                        <Setter Property="VerticalAlignment" Value="Center"/>
-                                        <Setter Property="Background" Value="Transparent"/>
+                        <TextBox Text="BLUS31156" x:Name="textBoxud"  PreviewDragOver="textBox1_PreviewDragOver" PreviewDrop="textBox1_PreviewDrop" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="70" MaxLength="16" IsUndoEnabled="False"/>
 
 
-                                        <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
-                                    </Style>
-                                </DataGrid.RowStyle>
-                                <DataGrid.Columns>
+                        <DataGrid x:Name="dataGrid" Background="Transparent" Margin="0,112,0,0" HeadersVisibility="Column" ItemsSource="{Binding}" IsReadOnly="True" CanUserSortColumns="False" CanUserResizeColumns="False" CanUserResizeRows="False" AutoGenerateColumns="False" GridLinesVisibility="None">
+
+                            <DataGrid.RowStyle>
+                                <Style TargetType="DataGridRow">
+                                    <Setter Property="FontSize" Value="14"/>
+                                    <Setter Property="FontFamily" Value="Arial"/>
+                                    <Setter Property="FontWeight" Value="Bold"/>
+                                    <Setter Property="VerticalAlignment" Value="Center"/>
+                                    <Setter Property="Background" Value="Transparent"/>
+
+
+                                    <EventSetter Event="MouseDoubleClick" Handler="Row_DoubleClick"/>
+                                </Style>
+                            </DataGrid.RowStyle>
+                            <DataGrid.Columns>
                                 <DataGridTextColumn Binding="{Binding Url}" MaxWidth="0"  >
 
                                 </DataGridTextColumn>
 
                                 <DataGridTextColumn Header="Version" Binding="{Binding Version}" MinWidth="60"  >
-                                        <DataGridTextColumn.CellStyle>
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                                <Setter Property="ToolTip">
-                                                    <Setter.Value>
-                                                        <TextBlock FontSize='12'
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="ToolTip">
+                                                <Setter.Value>
+                                                    <TextBlock FontSize='12'
 
                                                             Text="This is the APP_VER in PARAM.SFO" />
-                                                    </Setter.Value>
-                                                </Setter>
+                                                </Setter.Value>
+                                            </Setter>
 
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Sub Version" Binding="{Binding Sub}" MinWidth="60">
-                                        <DataGridTextColumn.CellStyle>
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                                <Setter Property="ToolTip">
-                                                    <Setter.Value>
-                                                        <TextBlock FontSize='12'
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Sub Version" Binding="{Binding Sub}" MinWidth="60">
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="ToolTip">
+                                                <Setter.Value>
+                                                    <TextBlock FontSize='12'
 
                                                             Text="This is the VERSION in PARAM.SFO" />
-                                                    </Setter.Value>
-                                                </Setter>
+                                                </Setter.Value>
+                                            </Setter>
 
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
-                                    
-                                    <DataGridTextColumn Header="Required FW" Binding="{Binding FWVer}" MinWidth="60" >
-                                        <DataGridTextColumn.CellStyle>
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                                <Setter Property="ToolTip">
-                                                    <Setter.Value>
-                                                        <TextBlock FontSize='12'
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
+
+                                <DataGridTextColumn Header="Required FW" Binding="{Binding FWVer}" MinWidth="60" >
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="ToolTip">
+                                                <Setter.Value>
+                                                    <TextBlock FontSize='12'
 
                                                             Text="This is the Required FW for the Update" />
-                                                    </Setter.Value>
-                                                </Setter>
+                                                </Setter.Value>
+                                            </Setter>
 
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
                                 <DataGridTextColumn MinWidth="10"  >
                                     <DataGridTextColumn.CellStyle>
                                         <Style TargetType="DataGridCell">
                                             <Setter Property="HorizontalAlignment" Value="Right"/>
-                                            
+
 
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
@@ -799,21 +1301,21 @@
 
 
                                 <DataGridTextColumn Header="SHA1" Binding="{Binding SHA1}" FontSize="16" >
-                                        <DataGridTextColumn.CellStyle>
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                                <Setter Property="FontFamily" Value="courier new"/>
-                                                <Setter Property="ToolTip">
-                                                    <Setter.Value>
-                                                        <TextBlock FontSize='12'
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="FontFamily" Value="courier new"/>
+                                            <Setter Property="ToolTip">
+                                                <Setter.Value>
+                                                    <TextBlock FontSize='12'
 
                                                             Text="This is the SHA1 of the PKG"/>
-                                                    </Setter.Value>
-                                                </Setter>
+                                                </Setter.Value>
+                                            </Setter>
 
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
 
                                 <DataGridTextColumn MinWidth="10"  >
                                     <DataGridTextColumn.CellStyle>
@@ -824,22 +1326,22 @@
                                         </Style>
                                     </DataGridTextColumn.CellStyle>
                                 </DataGridTextColumn>
-                                    
+
                                 <DataGridTextColumn Header="Name" Binding="{Binding Name}" >
-                                        <DataGridTextColumn.CellStyle>
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                                <Setter Property="ToolTip">
-                                                    <Setter.Value>
-                                                        <TextBlock FontSize='12'
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="ToolTip">
+                                                <Setter.Value>
+                                                    <TextBlock FontSize='12'
 
                                                             Text="This is the PKG Name" />
-                                                    </Setter.Value>
-                                                </Setter>
+                                                </Setter.Value>
+                                            </Setter>
 
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
 
                                 <DataGridTextColumn MinWidth="10"  >
                                     <DataGridTextColumn.CellStyle>
@@ -852,102 +1354,102 @@
                                 </DataGridTextColumn>
 
                                 <DataGridTemplateColumn  CanUserReorder="False" MinWidth="60" >
-                                        <DataGridTemplateColumn.CellTemplate>
-                                            <DataTemplate>
+                                    <DataGridTemplateColumn.CellTemplate>
+                                        <DataTemplate>
 
-                                                <Button  Click="Button_Click" Style="{StaticResource AccentedSquareButtonStyle}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch">
-                                                    <DockPanel LastChildFill="True">
-                                                        <Rectangle DockPanel.Dock="Left" Width="10" Height="10" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}, Path=(TextElement.Foreground)}" Margin="0,3,0,0" >
-                                                            <Rectangle.OpacityMask>
-                                                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_arrow_down}" />
-                                                            </Rectangle.OpacityMask>
-                                                        </Rectangle>
-                                                        <TextBlock VerticalAlignment="Center"
+                                            <Button  Click="Button_Click" Style="{StaticResource AccentedSquareButtonStyle}" HorizontalContentAlignment="Left" HorizontalAlignment="Stretch">
+                                                <DockPanel LastChildFill="True">
+                                                    <Rectangle DockPanel.Dock="Left" Width="10" Height="10" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}, Path=(TextElement.Foreground)}" Margin="0,3,0,0" >
+                                                        <Rectangle.OpacityMask>
+                                                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_arrow_down}" />
+                                                        </Rectangle.OpacityMask>
+                                                    </Rectangle>
+                                                    <TextBlock VerticalAlignment="Center"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                        FontSize="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=FontSize}"
                                        >
-                                                            <TextBlock.Text>
+                                                        <TextBlock.Text>
 
-                                                                <Binding Path="Size" />
+                                                            <Binding Path="Size" />
 
-                                                            </TextBlock.Text>
+                                                        </TextBlock.Text>
 
-                                                        </TextBlock>
+                                                    </TextBlock>
 
-                                                    </DockPanel>
-                                                </Button>
-                                            </DataTemplate>
-                                        </DataGridTemplateColumn.CellTemplate>
-                                    </DataGridTemplateColumn>
-
-
+                                                </DockPanel>
+                                            </Button>
+                                        </DataTemplate>
+                                    </DataGridTemplateColumn.CellTemplate>
+                                </DataGridTemplateColumn>
 
 
-                                   <DataGridTextColumn Header="Size" Binding="{Binding Size}" Visibility="Hidden" >
-                                        <DataGridTextColumn.CellStyle>
-                                            <Style TargetType="DataGridCell">
-                                                <Setter Property="HorizontalAlignment" Value="Right"/>
-                                                <Setter Property="ToolTip">
-                                                    <Setter.Value>
-                                                        <TextBlock FontSize='12'
+
+
+                                <DataGridTextColumn Header="Size" Binding="{Binding Size}" Visibility="Hidden" >
+                                    <DataGridTextColumn.CellStyle>
+                                        <Style TargetType="DataGridCell">
+                                            <Setter Property="HorizontalAlignment" Value="Right"/>
+                                            <Setter Property="ToolTip">
+                                                <Setter.Value>
+                                                    <TextBlock FontSize='12'
 
                                                             Text="This is the PKG Size" />
-                                                    </Setter.Value>
-                                                </Setter>
+                                                </Setter.Value>
+                                            </Setter>
 
-                                            </Style>
-                                        </DataGridTextColumn.CellStyle>
-                                    </DataGridTextColumn>
+                                        </Style>
+                                    </DataGridTextColumn.CellStyle>
+                                </DataGridTextColumn>
 
 
-                                </DataGrid.Columns>
+                            </DataGrid.Columns>
 
-                            </DataGrid>
-                            <TextBox x:Name="textBox3" IsReadOnly="True"  HorizontalAlignment="Left" Height="23" Margin="103,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" AllowDrop="False" Focusable="False"/>
-                            <Label x:Name="label" Content="Title" HorizontalAlignment="Left" Margin="103,10,0,0" VerticalAlignment="Top"/>
+                        </DataGrid>
+                        <TextBox x:Name="textBox3" IsReadOnly="True"  HorizontalAlignment="Left" Height="23" Margin="103,41,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="200" AllowDrop="False" Focusable="False"/>
+                        <Label x:Name="label" Content="Title" HorizontalAlignment="Left" Margin="103,10,0,0" VerticalAlignment="Top"/>
                         <Button x:Name="buttonud_Copy" Typography.Capitals="Normal" HorizontalAlignment="Left" Margin="453,40,0,0" VerticalAlignment="Top" Width="120" RenderTransformOrigin="0.505,0.15" Style="{StaticResource AccentedSquareButtonStyle}"  Click="dlbuttonud_Click">
-                                <DockPanel LastChildFill="True">
-                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                            <DockPanel LastChildFill="True">
+                                <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
                                             <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>-->
-                                    <TextBlock VerticalAlignment="Center"
+                                <TextBlock VerticalAlignment="Center"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                        FontSize="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=FontSize}"
                                        >
                                         Download XML
-                                    </TextBlock>
+                                </TextBlock>
 
-                                </DockPanel>
-                            </Button>
+                            </DockPanel>
+                        </Button>
 
-                            <Button x:Name="buttonud_Copy1" HorizontalAlignment="Left" Margin="578,40,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.505,0.15" Style="{StaticResource AccentedSquareButtonStyle}"  Click="buttonud_Click">
-                                <DockPanel LastChildFill="True">
-                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                        <Button x:Name="buttonud_Copy1" HorizontalAlignment="Left" Margin="578,40,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.505,0.15" Style="{StaticResource AccentedSquareButtonStyle}"  Click="buttonud_Click">
+                            <DockPanel LastChildFill="True">
+                                <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
                                             <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
                                         </Rectangle.OpacityMask>
                                     </Rectangle>-->
-                                    <TextBlock VerticalAlignment="Center"
+                                <TextBlock VerticalAlignment="Center"
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                        FontSize="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=FontSize}"
                                        >
                                         Download all Updates
-                                    </TextBlock>
+                                </TextBlock>
 
-                                </DockPanel>
-                            </Button>
+                            </DockPanel>
+                        </Button>
 
 
-                            <!-- <Label x:Name="label" Content="Version" HorizontalAlignment="Left" Margin="0,81,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.166,-0.708"/>
+                        <!-- <Label x:Name="label" Content="Version" HorizontalAlignment="Left" Margin="0,81,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.166,-0.708"/>
                             <Label x:Name="label4" Content="Size" HorizontalAlignment="Left" Margin="82,81,0,0" VerticalAlignment="Top"/>
                             <Label x:Name="label5" Content="SHA1" HorizontalAlignment="Left" Margin="229,81,0,0" VerticalAlignment="Top"/>
                             <Label x:Name="label6" Content="FWVer" HorizontalAlignment="Left" Margin="390,81,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.746,0.492"/>
                             -->
 
-                        </Grid>
-                    
+                    </Grid>
+
 
 
                 </Grid>
@@ -975,7 +1477,7 @@
                         <VisualBrush>
                             <VisualBrush.Visual>
                                 <Grid ClipToBounds="True">
-                                    <Image Source="tools/PS3GBS - background all v01.png">
+                                    <Image Source="tools/PS3GBS.png">
                                         <Image.Effect>
                                             <BlurEffect Radius="0"/>
                                         </Image.Effect>
@@ -1077,9 +1579,47 @@
             </TabItem>
 
 
+            <TabItem Header="FTP">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <DockPanel LastChildFill="True">
+                            <Rectangle DockPanel.Dock="Left" Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}, Path=(TextElement.Foreground)}" >
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_tools}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                            <Label Padding="5"
+                                       Foreground="{Binding (TextElement.Foreground), RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}"
+                                       FontSize="{Binding (TextElement.FontSize), RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}"
+                                       Content="Settings"
+                                       />
+                        </DockPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                <Grid Margin="0,0,0,6">
+                    <Grid.Background>
+                        <VisualBrush>
+                            <VisualBrush.Visual>
+                                <Grid ClipToBounds="True">
+                                    <Image Source="tools/PS3GBS.png">
+                                        <Image.Effect>
+                                            <BlurEffect Radius="0"/>
+                                        </Image.Effect>
+                                    </Image>
+                                </Grid>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Grid.Background>
+
+                    
+
+                </Grid>
+            </TabItem>
+
+
         </Controls:MetroTabControl>
 
-        <Grid Name="gridInfo2" Visibility="Hidden">
+        <Grid Name="gridInfo2" Visibility="Hidden" Grid.ColumnSpan="2">
             <Grid.Background>
                 <VisualBrush>
                     <VisualBrush.Visual>
@@ -1188,7 +1728,7 @@
 
         </Grid>
 
-        <Grid Name="gridInfo3" Visibility="Hidden">
+        <Grid Name="gridInfo3" Visibility="Hidden" Grid.ColumnSpan="2">
             <Grid.Background>
                 <VisualBrush>
                     <VisualBrush.Visual>

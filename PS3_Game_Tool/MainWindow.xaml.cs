@@ -447,34 +447,51 @@ namespace PS3_Game_Tool
             {
 
 
-                /*string tname = file.Name.Replace(".pkg", "");
-                pkg PKGICO = new pkg();
-                PKGICO.read_header(file.FullName, "ICON0.PNG");
-                
-                pkg PKGSFO = new pkg();
-                PKGSFO.read_header(file.FullName, "PARAM.SFO");//get pkg name
-                
-                
-                if(File.Exists("PARAM.SFO"))
+                string tname = file.Name.Replace(".pkg", "");
+                if (!File.Exists("SFO/" + tname + ".SFO") && !File.Exists("icons/" + tname + ".PNG"))
                 {
-                    File.Move("PARAM.SFO", "SFO/" + tname + ".SFO"); // Try to move
 
-                
-                if (File.Exists("ICON0.PNG"))
-                {
-                    File.Move("ICON0.PNG", "icons/" + tname +".PNG"); // Try to move
 
-                }}*/
 
+                    pkg PKGICO = new pkg();
+                    PKGICO.read_header(file.FullName, "ICON0.PNG");
+
+                    pkg PKGSFO = new pkg();
+                    PKGSFO.read_header(file.FullName, "PARAM.SFO");//get pkg name
+
+                    if (File.Exists("PARAM.SFO"))
+                    {
+
+                        if (File.Exists("SFO/" + tname + ".SFO"))
+                        {
+
+                            File.Delete("SFO/" + tname + ".SFO");
+                        }
+
+                        File.Move("PARAM.SFO", "SFO/" + tname + ".SFO"); // Try to move
+
+                    }
+                    if (File.Exists("ICON0.PNG"))
+                    {
+
+                        if (File.Exists("icons/" + tname + ".PNG"))
+                        {
+                            File.Delete("icons/" + tname + ".PNG");
+                        }
+                        File.Move("ICON0.PNG", "icons/" + tname + ".PNG"); // Try to move
+
+                    }
+
+                }
 
 
                 FileStream pkgFilehead = File.Open(file.FullName, FileMode.Open);
-                byte[] testmagic = new byte[0x06];
+                byte[] testmagic = new byte[0x05];
                 //pkgFilehead.Seek(0x30, SeekOrigin.Begin);
-                pkgFilehead.Read(testmagic, 0, 0x06);
+                pkgFilehead.Read(testmagic, 0, 0x05);
                 pkgFilehead.Close();
-                byte[] magic1 = new byte[] { 0x7F, 0x50, 0x4B, 0x47, 0x00, 0x00 };
-                byte[] magic2 = new byte[] { 0x7F, 0x50, 0x4B, 0x47, 0x80, 0x00 };
+                byte[] magic1 = new byte[] { 0x7F, 0x50, 0x4B, 0x47, 0x00 };
+                byte[] magic2 = new byte[] { 0x7F, 0x50, 0x4B, 0x47, 0x80 };
                 string pkgtype;
                 bool isdebug = testmagic.SequenceEqual(magic1);
                 bool isretail = testmagic.SequenceEqual(magic2);
@@ -543,23 +560,23 @@ namespace PS3_Game_Tool
 
                         if (s != "")
                         {
-                             DataRow dr1 = dtpkg.NewRow();
-                             dr1["IsSelected"] = false;
-                             dr1["Name"] = s;
-                             dr1["CID"] = scid;
-                             dr1["type"] = pkgtype;
-                             dr1["Size"] = sz;
-                             dtpkg.Rows.Add(dr1);
+                            DataRow dr1 = dtpkg.NewRow();
+                            dr1["IsSelected"] = false;
+                            dr1["Name"] = s;
+                            dr1["CID"] = scid;
+                            dr1["type"] = pkgtype;
+                            dr1["Size"] = sz;
+                            dtpkg.Rows.Add(dr1);
                         }
                         //dt.Rows.Add("false"+"    " + s, "      " + scid + "      ", "      " + pkgtype + "      ", "   " + sz);
                         //tabItem5.
-                         //dataGrid1.DataContext = dtpkg.DefaultView;
-                         //dataGrid1sign.DataContext = dtpkg.DefaultView;
+                        //dataGrid1.DataContext = dtpkg.DefaultView;
+                        //dataGrid1sign.DataContext = dtpkg.DefaultView;
                         //g1.Children.Add
                         //dataGrid2.DataContext = dtpkg.DefaultView;
 
                         string iconpath = s.Replace(".pkg", ".PNG");
-                        iconpath = appPath + "tools/icons/" + iconpath;
+                        iconpath = appPath + "icons/" + iconpath;
                         if (!File.Exists(iconpath))
                         {
                             iconpath = appPath + "tools/icons/download.png";
@@ -569,7 +586,7 @@ namespace PS3_Game_Tool
                         dr["Name"] = s;
                         dr["CID"] = scid;
                         dr["type"] = pkgtype;
-                        dr["size"] = sz ;
+                        dr["size"] = sz;
                         dr["icon"] = iconpath;
                         dr["tool"] = "  " + s + "  " + scid + "  " + sz;
                         dr["count"] = i;
@@ -589,19 +606,18 @@ namespace PS3_Game_Tool
                         //tabItem5.
                         //VisitPlanItems.
                         //PKGList.DataContext = dtpkg2.DefaultView;
-                        System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
-                        {
-                            //Launchpad.DataContext = dtpkg2.DefaultView;
-                            VisitPlanItems.DataContext = dtpkg2.DefaultView;
-                            lbtest.DataContext = dtpkg2.DefaultView;
-                            lvpkginfo.DataContext = dtpkg2.DefaultView;
-                        }));
+
+                        //Launchpad.DataContext = dtpkg2.DefaultView;
+                        VisitPlanItems.DataContext = dtpkg2.DefaultView;
+                        lbtest.DataContext = dtpkg2.DefaultView;
+                        lvpkginfo.DataContext = dtpkg2.DefaultView;
+
 
                         //Thumbnails.Items.Add(new BitmapImage(new Uri(iconpath)));
                         //tile1[i] = new Tile();
                         i++;
                     }
-                    
+
                 }
 
             }
@@ -1281,15 +1297,15 @@ namespace PS3_Game_Tool
                 /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
 
                 #region << pkg2sfo >>
-
+                /*
                 try
                 {
                     //we need the item info 
                     //mainly we need to items location
 
-                    //This can be used to decrypt a pkg file*/
+                    //This can be used to decrypt a pkg file
                     PS3gbs.pkg2sfo PKGSFO = new PS3gbs.pkg2sfo();
-                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString());//get pkg name
+                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString(), "PARAM.SFO");//get pkg name
 
                     
 
@@ -1315,12 +1331,12 @@ namespace PS3_Game_Tool
                 catch(Exception ex)
                 {
                     //this will propably break the code might need to be tweaked a bit 
-                }
+                }*/
 
                 #region << PARAM.SFO >>
-
+                string path = appPath + @"\SFO\" + items2[0].ToString().Replace(".pkg", ".SFO");
                 //this code will always work ! 
-                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(appPath + @"\Work\PARAM.SFO");
+                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
                 lvpkgsfo.Items.Clear();
                 foreach (var psfoitem in sfo.Tables)
                 {
@@ -1358,6 +1374,162 @@ namespace PS3_Game_Tool
 
             }
         }
+
+
+
+
+        private void plist_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            /*
+            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+                Object[] items2 = item1.Row.ItemArray;
+                string item = items2[4].ToString();
+                item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                lvpkginfo.Items.Clear();
+                string t = "";
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    t = items2[n].ToString();
+                    lvpkginfo.Items.Add(t1[n] + t);
+                    n++;
+                }
+
+
+                foreach (DataRow row in dtpkg2.Rows)
+                {
+                    int tname = Convert.ToInt32(row["count"]);
+                    if (tname == n)
+                    {
+
+                        row["bl"] = "8.0";
+                        row["tileh"] = "150";
+                        row["tilew"] = "150";
+                        row["column1w"] = "150";
+                        row["column2w"] = "650";
+                        row["roww"] = "50";
+                        row["imags"] = "100";
+                        VisitPlanItems.DataContext = dtpkg2.DefaultView;
+                        lbtest.DataContext = dtpkg2.DefaultView;
+                        lvpkginfo.DataContext = dtpkg2.DefaultView;
+                    }
+                    else
+                    {
+                        row["bl"] = "0.0";
+                        row["tileh"] = "100";
+                        row["tilew"] = "100";
+                        row["column1w"] = "150";
+                        row["column2w"] = "650";
+                        row["roww"] = "30";
+                        row["imags"] = "50";
+                        VisitPlanItems.DataContext = dtpkg2.DefaultView;
+                        lbtest.DataContext = dtpkg2.DefaultView;
+                        lvpkginfo.DataContext = dtpkg2.DefaultView;
+                    }
+                    VisitPlanItems.DataContext = dtpkg2.DefaultView;
+                    lbtest.DataContext = dtpkg2.DefaultView;
+                    lvpkginfo.DataContext = dtpkg2.DefaultView;
+
+
+                    //dispatcherTimer2.Start();
+                    //VisitPlanItems.DataContext = dt2.DefaultView;
+                }
+
+
+            }
+
+
+            lbtest.SelectedItem = (sender as Border).DataContext;*/
+            //string k = lbtest.SelectedItem
+            //if (!lbtest.IsFocused)
+            // lbtest.Focus();
+        }
+
+
+        private void plist_MouseExit(object sender, System.Windows.Input.MouseEventArgs e)
+        {
+            /*
+            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+                Object[] items2 = item1.Row.ItemArray;
+                string item = items2[4].ToString();
+                item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                lvpkginfo.Items.Clear();
+                string t = "";
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    t = items2[n].ToString();
+                    lvpkginfo.Items.Add(t1[n] + t);
+                    n++;
+                }
+
+
+                foreach (DataRow row in dtpkg2.Rows)
+                {
+                    int tname = Convert.ToInt32(row["count"]);
+                    if (tname == n)
+                    {
+
+                        row["bl"] = "8.0";
+                        row["tileh"] = "150";
+                        row["tilew"] = "150";
+                        row["column1w"] = "150";
+                        row["column2w"] = "650";
+                        row["roww"] = "50";
+                        row["imags"] = "100";
+                        // VisitPlanItems.DataContext = dtpkg2.DefaultView;
+                        // lbtest.DataContext = dtpkg2.DefaultView;
+                        //lvpkginfo.DataContext = dtpkg2.DefaultView;
+                    }
+                    else
+                    {
+                        row["bl"] = "0.0";
+                        row["tileh"] = "100";
+                        row["tilew"] = "100";
+                        row["column1w"] = "150";
+                        row["column2w"] = "650";
+                        row["roww"] = "30";
+                        row["imags"] = "50";
+                        //VisitPlanItems.DataContext = dtpkg2.DefaultView;
+                        //lbtest.DataContext = dtpkg2.DefaultView;
+                        //lvpkginfo.DataContext = dtpkg2.DefaultView;
+                    }
+
+
+                    //dispatcherTimer2.Start();
+                    //VisitPlanItems.DataContext = dt2.DefaultView;
+                }
+
+
+            }
+
+            VisitPlanItems.DataContext = dtpkg2.DefaultView;
+            lbtest.DataContext = dtpkg2.DefaultView;
+            lvpkginfo.DataContext = dtpkg2.DefaultView;
+
+            lbtest.SelectedItem = (sender as Border).DataContext;*/
+            //string k = lbtest.SelectedItem
+            //if (!lbtest.IsFocused)
+            // lbtest.Focus();
+        }
+
+
+
+
+
+
     }
-    
+
 }

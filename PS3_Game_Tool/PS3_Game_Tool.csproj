@@ -169,6 +169,8 @@
     <Content Include="Resources\Text Edit.svg" />
     <Resource Include="tools\TextEdit.ico" />
     <Resource Include="tools\PS3GBS - background all v01.png" />
+    <Resource Include="tools\PS3GBS - BG v05 half.png" />
+    <Resource Include="tools\PS3GBS.png" />
     <Content Include="tools\TextEdit.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
