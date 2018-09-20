@@ -43,7 +43,7 @@
         </Grid.ColumnDefinitions>
 
 
-        <Controls:MetroTabControl Visibility="Visible" x:Name="metroAnimatedTabControl" Margin="0,10,0,0" Grid.ColumnSpan="2">
+        <Controls:MetroAnimatedSingleRowTabControl Visibility="Visible" x:Name="metroAnimatedTabControl" Margin="0,10,0,0" Grid.ColumnSpan="2">
 
             <TabItem Header="PKG List">
                 <TabItem.HeaderTemplate>
@@ -371,7 +371,7 @@
                         </ListBox>
 
                     </GroupBox>
-
+                    <WebBrowser Name="pkgwb" Grid.Column="1" Visibility="Visible" />
 
                 </Grid>
 
@@ -1455,6 +1455,44 @@
                 </Grid>
             </TabItem>
 
+
+            <TabItem Header="FTP">
+                <TabItem.HeaderTemplate>
+                    <DataTemplate>
+                        <DockPanel LastChildFill="True">
+                            <Rectangle DockPanel.Dock="Left" Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}, Path=(TextElement.Foreground)}" >
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_server}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                            <Label Padding="5"
+                                       Foreground="{Binding (TextElement.Foreground), RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}"
+                                       FontSize="{Binding (TextElement.FontSize), RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}"
+                                       Content="FTP"
+                                       />
+                        </DockPanel>
+                    </DataTemplate>
+                </TabItem.HeaderTemplate>
+                <Grid Margin="0,0,0,6">
+                    <Grid.Background>
+                        <VisualBrush>
+                            <VisualBrush.Visual>
+                                <Grid ClipToBounds="True">
+                                    <Image Source="tools/PS3GBS.png">
+                                        <Image.Effect>
+                                            <BlurEffect Radius="0"/>
+                                        </Image.Effect>
+                                    </Image>
+                                </Grid>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Grid.Background>
+
+                    
+
+                </Grid>
+            </TabItem>
+
             <TabItem Header="Settings">
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
@@ -1578,20 +1616,19 @@
                 </Grid>
             </TabItem>
 
-
-            <TabItem Header="FTP">
+            <TabItem Header="Trello">
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <DockPanel LastChildFill="True">
                             <Rectangle DockPanel.Dock="Left" Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}, Path=(TextElement.Foreground)}" >
                                 <Rectangle.OpacityMask>
-                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_tools}" />
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_social_trello}" />
                                 </Rectangle.OpacityMask>
                             </Rectangle>
                             <Label Padding="5"
                                        Foreground="{Binding (TextElement.Foreground), RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}"
                                        FontSize="{Binding (TextElement.FontSize), RelativeSource={RelativeSource AncestorType={x:Type ContentPresenter}}}"
-                                       Content="Settings"
+                                       Content="Trello"
                                        />
                         </DockPanel>
                     </DataTemplate>
@@ -1611,13 +1648,13 @@
                         </VisualBrush>
                     </Grid.Background>
 
-                    
+                    <WebBrowser Name="trellowb" />
 
                 </Grid>
             </TabItem>
 
 
-        </Controls:MetroTabControl>
+        </Controls:MetroAnimatedSingleRowTabControl>
 
         <Grid Name="gridInfo2" Visibility="Hidden" Grid.ColumnSpan="2">
             <Grid.Background>

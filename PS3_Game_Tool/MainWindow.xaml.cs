@@ -171,16 +171,16 @@ namespace PS3_Game_Tool
             //rss();
 
             //i would also reccomend running this in a seperate thread so we can boot the app and maybe even report progress
-            new Thread(delegate () 
+           /*new Thread(delegate () 
             {
                 pkg_folder();
-            }).Start();
-          
+            }).Start();*/
+            pkg_folder();
 
             //SetupFolderWatchers
             SetupWatchers();
-
-
+            pkgwb.Navigate("http://www.psx-place.com");
+            trellowb.Navigate("https://trello.com/b/2MJwFHNs/sony-stuff");
         }
 
         private void SetupWatchers()
@@ -407,19 +407,13 @@ namespace PS3_Game_Tool
             try
             {
 
-                /*
-                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
-                {
-                    this.progress1.Visibility = Visibility.Visible;
-                }));*/
-                //set_load(true);
-
+                
                 i = 0;
-                //dataGrid1sign.ItemsSource.
-                //dt.Rows.Clear();
+                
                 dt2.Rows.Clear();
                 //should be wise to do this
                 dtpkg2.Clear();
+                dtpkg.Clear();
                 /*xDPx*/
                 //clean data context each time
                 System.Windows.Application.Current.Dispatcher.Invoke(
@@ -433,13 +427,8 @@ namespace PS3_Game_Tool
     });
 
 
-                //VisitPlanItems.DataContext = dt2.DefaultView;
-                //extractIcons();
-                System.Windows.Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
-                {
-                //this.image1.Visibility = Visibility.Collapsed;
-                //this.label6.Visibility = Visibility.Collapsed;
-            }));
+                
+               
 
                 appPath = appPath.Replace("PS3gbs.exe", "");
                 pkg = appPath;
@@ -454,22 +443,9 @@ namespace PS3_Game_Tool
                 }
 
                 dinfo = new DirectoryInfo(appPath + "/PKG");
-                //files = Directory.GetFiles(appPath, "*.pkg");
                 Files = dinfo.GetFiles("*.pkg");
-                //string[] tempsubdirectoryEntries = Directory.GetDirectories(appPath);
-                int sr = 0;
-                // subdirectoryEntries = new string[tempsubdirectoryEntries.Length - 1];
-                foreach (string s in Directory.GetDirectories(appPath))
-                {
-                    if (sr <= 19 && s.Remove(0, appPath.Length) != "bin")
-                    {
-                        //subdirectoryEntries[sr] = s.Remove(0, appPath.Length);
-                        sr++;
-                    }
-                }
-                //subdirectoryEntries = Directory.GetDirectories(appPath);
-                // listBox2.ItemsSource = subdirectoryEntries;
 
+              
 
                 foreach (FileInfo file in Files)
                 {
@@ -477,7 +453,7 @@ namespace PS3_Game_Tool
                     {
 
                         string tname = file.Name.Replace(".pkg", "");
-                        if (!File.Exists("SFO/" + tname + ".SFO") && !File.Exists("icons/" + tname + ".PNG"))
+                        if (!File.Exists("SFO/" + tname + ".SFO") || !File.Exists("icons/" + tname + ".PNG"))
                         {
 
 
@@ -516,7 +492,6 @@ namespace PS3_Game_Tool
 
                         FileStream pkgFilehead = File.Open(file.FullName, FileMode.Open);
                         byte[] testmagic = new byte[0x05];
-                        //pkgFilehead.Seek(0x30, SeekOrigin.Begin);
                         pkgFilehead.Read(testmagic, 0, 0x05);
                         pkgFilehead.Close();
                         byte[] magic1 = new byte[] { 0x7F, 0x50, 0x4B, 0x47, 0x00 };
@@ -549,7 +524,6 @@ namespace PS3_Game_Tool
 
                             FileStream pkgFilesha = File.Open(file.FullName, FileMode.Open);
                             byte[] readsha = new byte[0x08];
-                            //pkgFilehead.Seek(0x30, SeekOrigin.Begin);
                             pkgFilesha.Read(data, 0, 0x80);
                             pkgFilesha.Seek(0xb8, SeekOrigin.Begin);
                             pkgFilesha.Read(readsha, 0, 0x08);
@@ -597,11 +571,6 @@ namespace PS3_Game_Tool
                                     dr1["Size"] = sz;
                                     dtpkg.Rows.Add(dr1);
                                 }
-                                //dt.Rows.Add("false"+"    " + s, "      " + scid + "      ", "      " + pkgtype + "      ", "   " + sz);
-                                //tabItem5.
-                                //dataGrid1.DataContext = dtpkg.DefaultView;
-                                //dataGrid1sign.DataContext = dtpkg.DefaultView;
-                                //g1.Children.Add
                                 //dataGrid2.DataContext = dtpkg.DefaultView;
 
                                 string iconpath = s.Replace(".pkg", ".PNG");
@@ -631,16 +600,7 @@ namespace PS3_Game_Tool
                                 dtpkg2.Rows.Add(dr);
 
 
-                                //dt.Rows.Add("    " + s, "      " + scid + "      ", "      " + pkgtype + "      ", "   " + sz + "      ","icon.png");
-                                //tabItem5.
-                                //VisitPlanItems.
-                                //PKGList.DataContext = dtpkg2.DefaultView;
-
-                                //Launchpad.DataContext = dtpkg2.DefaultView;
-
-                                //Thumbnails.Items.Add(new BitmapImage(new Uri(iconpath)));
-                                //tile1[i] = new Tile();
-                                i++;
+                                 i++;
                             }
 
                         }
@@ -683,12 +643,7 @@ namespace PS3_Game_Tool
                                    }
                                });
 
-                //set_load(false);
-                /*
-                Application.Current.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
-                {
-                    this.progress1.Visibility = Visibility.Collapsed;
-                }));*/
+               
 
             }
             catch(Exception ex)
@@ -1346,6 +1301,8 @@ namespace PS3_Game_Tool
             
             if (item1 != null)
             {
+                pkgwb.Visibility = Visibility.Hidden;
+                pkgwb.Dispose();
                 Object[] items2 = item1.Row.ItemArray;
                 string item = items2[4].ToString();
                 item = item.Replace(".PNG", ".PKG");
