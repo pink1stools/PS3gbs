@@ -10,7 +10,10 @@
         mc:Ignorable="d"
         Loaded="MetroWindow_Loaded" Closing="MetroWindow_Closing"  Height="647" Width="1000" >
 
-
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="Converter" />
+    </Window.Resources>
+    
     <Controls:MetroWindow.LeftWindowCommands>
         <Controls:WindowCommands>
 
@@ -227,12 +230,14 @@
 
                             <ListBox.ItemTemplate >
                                 <DataTemplate>
-                                    <Border MouseEnter="plist_MouseEnter" MouseLeave="plist_MouseExit">
+                                    
+                                        <Border MouseEnter="plist_MouseEnter" MouseLeave="plist_MouseExit">
 
                                         <StackPanel x:Name="plist" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
-
+                                            <mah:Badged  BadgePlacementMode="TopLeft"   Badge="{Binding Path=text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                            
                                             <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-
+                                          </mah:Badged>
                                             <TextBlock  Width="180" Text="{Binding CID}" Grid.Row="2" FontSize="12" Name="txtScrolling">
                                                 <TextBlock.RenderTransform>
                                                     <TranslateTransform x:Name="translate" />
@@ -256,6 +261,7 @@
                             -->
                                         </StackPanel>
                                     </Border>
+                                    
                                 </DataTemplate>
                             </ListBox.ItemTemplate>
                         </ListBox>
@@ -325,7 +331,7 @@
 
                                 </DockPanel>
                             </Button>
-                            <Button x:Name="button_Copy3"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
+                            <Button x:Name="button_Copy3" Click="button_Copy3_Click"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
                                 <DockPanel LastChildFill="True">
                                     <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
@@ -1165,7 +1171,7 @@
             </TabItem>
 
 
-            <TabItem Header="Update Downloader">
+            <TabItem Header="Update Downloader" Name="updtab">
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <DockPanel LastChildFill="True">

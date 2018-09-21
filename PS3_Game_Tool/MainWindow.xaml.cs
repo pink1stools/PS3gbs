@@ -33,6 +33,7 @@ using Image = System.Drawing.Image;
 using Button = System.Windows.Controls.Button;
 using MessageBox = System.Windows.MessageBox;
 using ListBox = System.Windows.Controls.ListBox;
+using System.Windows.Automation.Peers;
 
 namespace PS3_Game_Tool
 {
@@ -61,6 +62,7 @@ namespace PS3_Game_Tool
         string color;
         string ctheme = "BaseDark";
 
+        Nullable<int> upc = null;
         FileInfo[] Files;
         FileInfo[] Files2;
         string[] directories;
@@ -69,13 +71,13 @@ namespace PS3_Game_Tool
         string appPath = System.Reflection.Assembly.GetExecutingAssembly().Location;//System.Windows.Shapes.Path.GetDirectoryName(Application.ExecutablePath.);
         static readonly string[] SizeSuffixes = { "bytes", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB" };
 
-        
+
         public MainWindow()
         {
             InitializeComponent();
             LoadSettings();
             ChangeAppStyle();
-            
+
             //rss();
         }
 
@@ -171,10 +173,10 @@ namespace PS3_Game_Tool
             //rss();
 
             //i would also reccomend running this in a seperate thread so we can boot the app and maybe even report progress
-           /*new Thread(delegate () 
-            {
-                pkg_folder();
-            }).Start();*/
+            /*new Thread(delegate () 
+             {
+                 pkg_folder();
+             }).Start();*/
             pkg_folder();
 
             //SetupFolderWatchers
@@ -233,7 +235,7 @@ namespace PS3_Game_Tool
 
         private void CreateBaseDirecotries()
         {
-            if(!Directory.Exists(appPath + pkg_directory))
+            if (!Directory.Exists(appPath + pkg_directory))
             {
                 Directory.CreateDirectory(appPath + pkg_directory);
             }
@@ -241,11 +243,11 @@ namespace PS3_Game_Tool
             {
                 Directory.CreateDirectory(appPath + iso_directory);
             }
-            if(!Directory.Exists(appPath + "/SFO"))
+            if (!Directory.Exists(appPath + "/SFO"))
             {
                 Directory.CreateDirectory(appPath + "/SFO");
             }
-            if(!Directory.Exists(appPath + "/icons"))
+            if (!Directory.Exists(appPath + "/icons"))
             {
                 Directory.CreateDirectory(appPath + "/icons");
             }
@@ -258,7 +260,7 @@ namespace PS3_Game_Tool
         }
 
 
-      
+
 
         private void MetroWindow_Closing(object sender, CancelEventArgs e)
         {
@@ -285,7 +287,7 @@ namespace PS3_Game_Tool
             var main = (MainWindow)System.Windows.Application.Current.MainWindow;
             await main.ShowMetroDialogAsync(dialog);
         }
-        
+
 
         private void GenerateImage(string bkImage, string cname)
         {
@@ -321,7 +323,7 @@ namespace PS3_Game_Tool
                 }
             }
         }
-        
+
         #region<<style>>
 
         public void ChangeAppStyledark()
@@ -355,7 +357,7 @@ namespace PS3_Game_Tool
             // get the theme from the current application
             var theme = ThemeManager.DetectAppStyle(System.Windows.Application.Current);
 
-            if(color == null)
+            if (color == null)
             {
                 color = "Crimson";
             }
@@ -398,7 +400,7 @@ namespace PS3_Game_Tool
             Properties.Settings.Default.color = color;
             Properties.Settings.Default.Save();
         }
-        
+
         #endregion<<settings>>
 
         #region<<files>>
@@ -407,9 +409,9 @@ namespace PS3_Game_Tool
             try
             {
 
-                
+
                 i = 0;
-                
+
                 dt2.Rows.Clear();
                 //should be wise to do this
                 dtpkg2.Clear();
@@ -423,12 +425,12 @@ namespace PS3_Game_Tool
         lbtest.DataContext = null;
 
         /*https://stackoverflow.com/a/22528015/3578728*/
-        
+
     });
 
 
-                
-               
+
+
 
                 appPath = appPath.Replace("PS3gbs.exe", "");
                 pkg = appPath;
@@ -445,7 +447,7 @@ namespace PS3_Game_Tool
                 dinfo = new DirectoryInfo(appPath + "/PKG");
                 Files = dinfo.GetFiles("*.pkg");
 
-              
+
 
                 foreach (FileInfo file in Files)
                 {
@@ -579,6 +581,11 @@ namespace PS3_Game_Tool
                                 {
                                     iconpath = appPath + "tools/icons/download.png";
                                 }
+                                
+                                string tid = scid.Remove(0, 7);
+                                tid = tid.Remove(9, 20);
+                                cupdates(tid, i);
+
 
                                 DataRow dr = dtpkg2.NewRow();
                                 dr["Name"] = s;
@@ -595,12 +602,15 @@ namespace PS3_Game_Tool
                                 dr["column2w"] = "650";
                                 dr["roww"] = "25";
                                 dr["imags"] = "50";
-                                dr["text1s"] = "16";
-                                dr["text2s"] = "12";
+                                //dr["text1s"] = upc;
+                                dr["text2s"] = "true";
+
+
+                                
+                                //dr["text1s"] = upc;
                                 dtpkg2.Rows.Add(dr);
 
-
-                                 i++;
+                                i++;
                             }
 
                         }
@@ -637,16 +647,16 @@ namespace PS3_Game_Tool
                                        lbtest.Items.Refresh();
                                        lvpkginfo.Items.Refresh();
                                    }
-                                   catch(Exception ex)
+                                   catch (Exception ex)
                                    {
 
                                    }
                                });
 
-               
+
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 /*added a try catch for this enitire method as well as something is causing it to fall over on some of the pkg's i tested */
             }
@@ -662,7 +672,7 @@ namespace PS3_Game_Tool
 
             foreach (FileInfo file in Files2)
             {
-                
+
                 // Use ProcessStartInfo class.
                 ProcessStartInfo startInfo = new ProcessStartInfo();
                 startInfo.CreateNoWindow = true;
@@ -839,7 +849,7 @@ namespace PS3_Game_Tool
                 }
             }
         }
-        
+
         #endregion<<tiles>>
 
         #region<<buttons>>
@@ -986,7 +996,7 @@ namespace PS3_Game_Tool
             }
         }
 
-       
+
 
         private void textBox2_PreviewDragOver(object sender, System.Windows.DragEventArgs e)
         {
@@ -1006,8 +1016,8 @@ namespace PS3_Game_Tool
             foreach (string File in FileList)
                 s2 = s2 + " " + File;
             if (Directory.Exists(s2))
-            { 
-            textBox2.Text = s2;
+            {
+                textBox2.Text = s2;
 
                 iso_directory = textBox2.Text;
                 Properties.Settings.Default.iso_folder = iso_directory;
@@ -1102,7 +1112,7 @@ namespace PS3_Game_Tool
             }
         }
 
-       static bool FileEquals(string path1, string path2)
+        static bool FileEquals(string path1, string path2)
         {
             byte[] file1 = File.ReadAllBytes(path1);
             byte[] file2 = File.ReadAllBytes(path2);
@@ -1137,7 +1147,7 @@ namespace PS3_Game_Tool
                     //  Make nodeList to hold all the Package Elements
                     XmlNodeList elemList = xdoc.GetElementsByTagName("package");
                     //  Loop through the list and get each entry
-                    
+
                     for (int i = 0; i < elemList.Count; i++)
                     {
                         //  Obvious?
@@ -1152,17 +1162,17 @@ namespace PS3_Game_Tool
                         updateFWVer = updateFWVer.Substring(0, 5);
                         if (updateFWVer.StartsWith("0"))
                         {
-                          updateFWVer = updateFWVer.TrimStart('0') ;
+                            updateFWVer = updateFWVer.TrimStart('0');
 
                         }
-                        
+
 
                         int indexof = sub.LastIndexOf('-');
                         sub = sub.Substring(0, indexof);
 
                         string name = sub.Substring(sub.LastIndexOf("/") + 2) + ".pkg";
 
-                        sub = sub.Substring(sub.LastIndexOf("-")+2);
+                        sub = sub.Substring(sub.LastIndexOf("-") + 2);
                         sub = sub.Substring(0, 2) + "." + sub.Substring(2);
                         if (sub.StartsWith("0"))
                         {
@@ -1178,7 +1188,7 @@ namespace PS3_Game_Tool
 
 
                         //  Add it to the dataGridView
-                       
+
                         DataRow dr = dtud.NewRow();
                         dr["Version"] = updateVersion;
                         dr["Size"] = "  Download  " + SizeSuffix(Convert.ToInt64(updateSize));
@@ -1245,7 +1255,7 @@ namespace PS3_Game_Tool
             cancelBtn.Click += (s, e) =>
             {
                 DialogManager.HideMetroDialogAsync(this, Dialog);
-              
+
             };
 
             Canvas canvas = new Canvas();
@@ -1264,13 +1274,138 @@ namespace PS3_Game_Tool
             string name = (dataGrid.SelectedCells[7].Column.GetCellContent(item) as TextBlock).Text;
 
             downloader dl = new downloader(ID, "Updates/" + name);
-           
+
             dl.Show();
 
 
-            
+
         }
 
+        private void cupdates(string cid, int count)
+        {
+            //  Set up the url of the xml file containing the game updates
+            webUrl = "https://a0.ww.np.dl.playstation.net/tpl/np/" + cid + "/" + cid + "-ver.xml";
+            //  Update status..
+            //lbl_Url.Text = "fetching... " + webUrl;
+            //  Needed to allow the certificate
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            //  Make a new webClient to get the xml file and get/parse it on another thread.
+            WebClient wc = new WebClient();
+           // wc.DownloadStringCompleted += cupHttpsCompleted;
+
+           // wc.DownloadStringAsync(new Uri(webUrl));
+
+
+            wc.DownloadStringCompleted += (sender1, e1) =>
+            {
+
+
+                if (e1.Error == null)
+                {
+                    //  Make an new XmlDocument
+                    XmlDocument xdoc = new XmlDocument();
+                    // Gotta love try :P
+                    //  Load the xml file from e.Result into the XmlDoc
+
+                    try
+                    {
+                        xdoc.LoadXml(e1.Result);
+                        //  Make nodeList to hold all the Package Elements
+                        XmlNodeList elemList = xdoc.GetElementsByTagName("package");
+                        //  Loop through the list and get each entry
+
+                        if (elemList.Count != 0) // if id==2
+                        {
+                            upc = elemList.Count;                   //break; break or not depending on you
+                        }
+                        else
+                        {
+                            upc = null;
+                        }
+
+
+                        
+                        foreach (DataRow dr in dtpkg2.Rows) // search whole table
+                        {
+                            if (Convert.ToInt32(dr["count"]) == count) // if id==2
+                            {
+                                dr["text1s"] = upc; //change the name
+                                                               //break; break or not depending on you
+                            }
+
+                        }
+                        if(elemList.Count == 0)
+                        {
+                           
+
+                        }
+                    }
+
+                    catch (Exception a)
+                    {
+
+                        //  Show error
+                        //showError();
+                    }
+
+                }
+
+            };
+
+            wc.DownloadStringAsync(new Uri(webUrl));
+
+        }
+
+    
+
+
+        private void cupHttpsCompleted(object sender, DownloadStringCompletedEventArgs e)
+        {
+            //dtud.Rows.Clear();
+            // textBox3.Text = "";
+            //  Check if it downloaded the xml file ok
+            if (e.Error == null)
+            {
+                //  Make an new XmlDocument
+                XmlDocument xdoc = new XmlDocument();
+                // Gotta love try :P
+                try
+                {
+                    //  Load the xml file from e.Result into the XmlDoc
+                    xdoc.LoadXml(e.Result);
+                    //  Make nodeList to hold all the Package Elements
+                    XmlNodeList elemList = xdoc.GetElementsByTagName("package");
+                    //  Loop through the list and get each entry
+                    upc = elemList.Count;
+                    for (int i = 0; i < elemList.Count; i++)
+                    {
+
+
+
+
+
+
+
+
+                    }
+
+
+                }
+                //  If error..
+                catch (Exception a)
+                {
+
+                    //  Show error
+                    //showError();
+                }
+            }
+            else // If error..
+            {
+
+                //  Show error
+                //showError();
+            }
+        }
 
 
 
@@ -1298,7 +1433,7 @@ namespace PS3_Game_Tool
         private void lbtest_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
-            
+
             if (item1 != null)
             {
                 pkgwb.Visibility = Visibility.Hidden;
@@ -1309,12 +1444,12 @@ namespace PS3_Game_Tool
                 //this.label4.Content = items2[0].ToString();
                 lvpkginfo.Items.Clear();
                 int n = 0;
-                while(n < 4)
+                while (n < 4)
                 {
                     string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
                     //Object nob = items2[n];
                     string t = items2[n].ToString();
-                    lvpkginfo.Items.Add(t1[n] + t );
+                    lvpkginfo.Items.Add(t1[n] + t);
                     n++;
                 }
 
@@ -1393,7 +1528,7 @@ namespace PS3_Game_Tool
 
                 Directory.Delete(target_dir, false);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
 
             }
@@ -1549,11 +1684,38 @@ namespace PS3_Game_Tool
             // lbtest.Focus();
         }
 
+        private void button_Copy3_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
 
+            if (item1 != null)
+            {
 
+                Object[] items2 = item1.Row.ItemArray;
+                // string item = items2[4].ToString();
+                //item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                //lvpkginfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
 
-
-
+                    //lvpkginfo.Items.Add(t1[n] + t);
+                    if (n == 1)
+                    {
+                        string tid = t.Remove(0, 7);
+                        tid = tid.Remove(9, 20);
+                        textBoxud.Text = tid;
+                        buttonud.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        metroAnimatedTabControl.SelectedValue = updtab;
+                    }
+                    n++;
+                }
+            }
+        }
     }
 
 }
