@@ -178,11 +178,12 @@ namespace PS3_Game_Tool
                  pkg_folder();
              }).Start();*/
             pkg_folder();
-
+            //open_iso_folder();
             //SetupFolderWatchers
             SetupWatchers();
-            pkgwb.Navigate("http://www.psx-place.com");
-            trellowb.Navigate("https://trello.com/b/2MJwFHNs/sony-stuff");
+            StartWeb();
+            //pkgwb.Navigate("http://www.psx-place.com");
+            //trellowb.Navigate("https://trello.com/b/2MJwFHNs/sony-stuff");
         }
 
         private void SetupWatchers()
@@ -235,11 +236,11 @@ namespace PS3_Game_Tool
 
         private void CreateBaseDirecotries()
         {
-            if (!Directory.Exists(appPath + pkg_directory))
+            if (!Directory.Exists(appPath + pkg_directory) && pkg_directory == "/PKG")
             {
                 Directory.CreateDirectory(appPath + pkg_directory);
             }
-            if (!Directory.Exists(appPath + iso_directory))
+            if (!Directory.Exists(appPath + iso_directory) && iso_directory == "/ISO")
             {
                 Directory.CreateDirectory(appPath + iso_directory);
             }
@@ -253,14 +254,37 @@ namespace PS3_Game_Tool
             }
 
             //add misc folders here 
-            if (!Directory.Exists(appPath + game_directory))
+            if (!Directory.Exists(appPath + game_directory) && pkg_directory == "/Game Files")
             {
                 Directory.CreateDirectory(appPath + game_directory);
             }
         }
 
+        private void StartWeb()
+        {
+            if(WebRequestTest() == true)
+            {
+                pkgwb.Navigate("http://www.psx-place.com");
+                //trellowb.Navigate("https://trello.com/b/2MJwFHNs/sony-stuff");
+                
+            }
 
+        }
 
+        public static bool WebRequestTest()
+        {
+            string url = "http://www.google.com";
+            try
+            {
+                System.Net.WebRequest myRequest = System.Net.WebRequest.Create(url);
+                System.Net.WebResponse myResponse = myRequest.GetResponse();
+            }
+            catch (System.Net.WebException)
+            {
+                return false;
+            }
+            return true;
+        }
 
         private void MetroWindow_Closing(object sender, CancelEventArgs e)
         {
@@ -664,46 +688,176 @@ namespace PS3_Game_Tool
 
         private void open_iso_folder()
         {
+            int i2 = 0;
             appPath = appPath.Replace("PS3gbs.exe", "");
-
+            if(iso_directory == "ISO")
+            {
+                iso_directory = appPath + iso_directory;
+            }
             dinfo = new DirectoryInfo(iso_directory);
-            //files = Directory.GetFiles(appPath, "*.pkg");
             Files2 = dinfo.GetFiles("*.iso");
 
             foreach (FileInfo file in Files2)
             {
-
-                // Use ProcessStartInfo class.
-                ProcessStartInfo startInfo = new ProcessStartInfo();
-                startInfo.CreateNoWindow = true;
-                startInfo.UseShellExecute = false;
-                startInfo.FileName = "bin/7z.exe";
-                startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-                startInfo.Arguments = "e " + '"' + file + "-o" + '"' + " bin/icons " + '"' + "PS3_GAME\\ICON0.png" + '"';
-
                 string iname = file.Name.Replace("iso", "png");
-                File.Move("bin/icons/ocon0.png", "bin/icons/" + iname);
+                string iname1 = file.Name.Replace("iso", "SFO");
+                /*Process p = new Process();
+                 ProcessStartInfo psi = new ProcessStartInfo();
+                 psi.CreateNoWindow = false;
+                 psi.UseShellExecute = false;
+                 psi.FileName = "CMD.EXE";
+                 psi.Arguments = "/k 7z.exe e " + '"' + iso_directory + "/" + file +  '"' + " -o" + "icons " + '"' + "PS3_GAME\\ICON0.png" + '"';
+                 Process exeProcess = Process.Start(psi);
+                 p.WaitForExit(); */
+
+                
+                if (!File.Exists(appPath + "icons/" + iname) || !File.Exists(appPath + "SFO/" + iname1))
+                {
+                    
+                    if (File.Exists(appPath + "SFO/PARAM.SFO"))
+                    {
+
+                        File.Delete(appPath + "SFO/PARAM.SFO");
+                    }
+                    if (File.Exists(appPath + "icons/ICON0.png"))
+                    {
+
+                        File.Delete(appPath + "icons/ICON0.png");
+                    }
+                    
+                    ProcessStartInfo startInfo1 = new ProcessStartInfo();
+                    startInfo1.CreateNoWindow = true;
+                    startInfo1.UseShellExecute = false;
+                    startInfo1.FileName = "7z.exe";
+                    startInfo1.WindowStyle = ProcessWindowStyle.Hidden;
+                    startInfo1.Arguments = "e " + '"' + iso_directory + "/" + file + '"' + " -o" + "SFO " + '"' + "PS3_GAME\\PARAM.SFO" + '"';
+                    Process exeProcess = Process.Start(startInfo1);
+                    exeProcess.WaitForExit();
+
+
+                    if (File.Exists(appPath + "SFO/" + iname1))
+                    {
+
+                        File.Delete(appPath + "SFO/" + iname1);
+
+                    }
+                    File.Move("SFO/PARAM.SFO", "SFO/" + iname1);
+
+
+                    ProcessStartInfo startInfo = new ProcessStartInfo();
+                    startInfo.CreateNoWindow = true;
+                    startInfo.UseShellExecute = false;
+                    startInfo.FileName = "7z.exe";
+                    startInfo.WindowStyle = ProcessWindowStyle.Hidden;
+                    startInfo.Arguments = "e " + '"' + iso_directory + "/" + file + '"' + " -o" + "icons " + '"' + "PS3_GAME\\ICON0.png" + '"';
+                    Process exeProcess2 = Process.Start(startInfo);
+                    exeProcess2.WaitForExit();
+                    
+                    if (File.Exists(appPath + "icons/" + iname))
+                    {
+
+                        File.Delete(appPath + "icons/" + iname);
+
+                    }
+                    File.Move("icons/icon0.png", "icons/" + iname);
+
+
+                    
+                }
+
+                string sfoname = file.Name.Replace("iso", "SFO");
+
+                if (File.Exists(appPath + "SFO/" + sfoname))
+                {
+
+                    
+                    //Add to list
+                    #region << PARAM.SFO >>
+                    string path = appPath + "SFO/" + sfoname;
+                    //this code will always work ! 
+                    Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
+                    //string cid = sfo.Tables[0];
+
+                    lvisosfo.Items.Clear();
+                    
+                    #endregion << PARAM.SFO >>
+                    string isos = sfo.Title;
+                    string isoscid = sfo.TitleID;
+                    string isosz = SizeSuffix(file.Length);
+
+                    DataRow dr1 = dtiso.NewRow();
+                        dr1["IsSelected"] = false;
+                        dr1["Name"] = isos;
+                        dr1["CID"] = isoscid;
+                        dr1["type"] = null;
+                        dr1["Size"] = isosz;
+                        dtiso.Rows.Add(dr1);
+
+                    //dataGrid2.DataContext = dtpkg.DefaultView;
+
+                    string iconpath = appPath + "icons/" + iname;
+                    
+                    if (!File.Exists(iconpath))
+                    {
+                        iconpath = appPath + "icons/download.png";
+                    }
+
+                   
+
+
+                    DataRow dr = dtiso2.NewRow();
+                    dr["Name"] = isos;
+                    dr["CID"] = isoscid;
+                    dr["type"] = 0;
+                    dr["size"] = isosz;
+                    dr["icon"] = iconpath;
+                    dr["tool"] = "  " + isos + "  " + isoscid + "  "  ;
+                    dr["count"] = i2;
+                    dr["bl"] = "0.0";
+                    dr["tileh"] = "50";
+                    dr["tilew"] = "800";
+                    dr["column1w"] = "150";
+                    dr["column2w"] = "650";
+                    dr["roww"] = "25";
+                    dr["imags"] = "50";
+                    //dr["text1s"] = upc;
+                    dr["text2s"] = "true";
+
+
+
+                    //dr["text1s"] = upc;
+                    dtiso2.Rows.Add(dr);
+                    
+
+                    //VisitPlanItems.DataContext = dtpkg2.DefaultView;
+                    lbisotest.DataContext = dtiso2.DefaultView;
+                    lvisoinfo.DataContext = dtiso2.DefaultView;
+
+                    
+                    i2++;
+                }
 
             }
 
-        }
+
+       
+    }
 
         private void open_game_folder()
         {
             appPath = appPath.Replace("PS3gbs.exe", "");
             dinfo = new DirectoryInfo(appPath);
-            //files = Directory.GetFiles(appPath, "*.pkg");
-            //Files = dinfo.GetFiles("*.pkg");
+            
             directories = Directory.GetDirectories(game_directory);
 
             foreach (string directoriy in directories)
             {
                 if (File.Exists(directoriy + "\\PS3_GAME\\PARAM.SFO"))
                 {
-                    File.Copy(directoriy + "\\PS3_GAME\\PARAM.SFO", "bin/sfo/" + directoriy + ".sfo");
+                    File.Copy(directoriy + "\\PS3_GAME\\PARAM.SFO", "SFO/" + directoriy + ".SFO");
                     if (File.Exists(directoriy + "\\PS3_GAME\\ICON0.png"))
                     {
-                        File.Copy(directoriy + "\\PS3_GAME\\ICON0.png", "bin/icons/" + directoriy + ".png");
+                        File.Copy(directoriy + "\\PS3_GAME\\ICON0.png", "icons/" + directoriy + ".PNG");
 
                     }
 
@@ -1508,6 +1662,7 @@ namespace PS3_Game_Tool
 
             }
         }
+
         public static void DeleteDirectory(string target_dir)
         {
             try
@@ -1535,6 +1690,84 @@ namespace PS3_Game_Tool
         }
 
 
+
+        private void lbisotest_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+               
+                Object[] items2 = item1.Row.ItemArray;
+                string item = items2[4].ToString();
+                item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                lvisoinfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+                    lvisoinfo.Items.Add(t1[n] + t);
+                    n++;
+                }
+
+                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
+
+                #region << pkg2sfo >>
+                /*
+                try
+                {
+                    //we need the item info 
+                    //mainly we need to items location
+
+                    //This can be used to decrypt a pkg file
+                    PS3gbs.pkg2sfo PKGSFO = new PS3gbs.pkg2sfo();
+                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString(), "PARAM.SFO");//get pkg name
+
+                    
+
+                    //this will actually decrypt the item so we will need to clean the folder after moving the sfo 
+                    //this could be cleaner also we can actually instead of exacting the pkg we could always load sfo from the buffer in the exact code but this will work for now
+                    if (Directory.Exists(appPath + @"\temp\pkg"))
+                    {
+                        if (!Directory.Exists("Work"))
+                        {
+                            //create working directory
+                            Directory.CreateDirectory("Work");
+                        }
+                       
+                        //copy sfo to working folder
+                        File.Copy(appPath + @"\temp\pkg\" + items2[0].ToString().Replace(".pkg", "") + @"\PARAM.SFO", appPath + @"\Work\PARAM.SFO", true);
+
+                        //Directory.Delete(appPath + @"\temp\pkg");
+                        DeleteDirectory(appPath + @"\temp\pkg");
+
+                        
+                    }
+                }
+                catch(Exception ex)
+                {
+                    //this will propably break the code might need to be tweaked a bit 
+                }*/
+
+                #region << PARAM.SFO >>
+                string path = appPath + @"\SFO\" + items2[0].ToString().Replace(".pkg", ".SFO");
+                //this code will always work ! 
+                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
+                lvisosfo.Items.Clear();
+                foreach (var psfoitem in sfo.Tables)
+                {
+                    lvisosfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
+                }
+
+                #endregion << PARAM.SFO >>
+
+                #endregion << pkg2sfo >> 
+
+            }
+        }
 
 
         private void plist_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)

@@ -74,6 +74,8 @@ namespace PS3_Game_Tool {
         [System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [System.CodeDom.Compiler.GeneratedCodeAttribute("PresentationBuildTasks", "4.0.0.0")]
         public static void Main() {
+            SplashScreen splashScreen = new SplashScreen("tools/text%20edit.png");
+            splashScreen.Show(true);
             PS3_Game_Tool.App app = new PS3_Game_Tool.App();
             app.InitializeComponent();
             app.Run();

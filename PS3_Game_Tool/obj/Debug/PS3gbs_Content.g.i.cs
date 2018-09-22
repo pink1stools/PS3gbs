@@ -9,6 +9,7 @@
 //------------------------------------------------------------------------------
 
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("resources/text%20edit.svg")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("tools/text%20edit.svg")]
 [assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("tools/textedit.svg")]
 
 

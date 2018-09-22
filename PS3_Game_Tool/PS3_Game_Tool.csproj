@@ -48,6 +48,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>tools\Text Edit.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="ControlzEx, Version=3.0.2.4, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\ControlzEx.3.0.2.4\lib\net45\ControlzEx.dll</HintPath>
@@ -167,10 +170,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\Text Edit.svg" />
-    <Resource Include="tools\TextEdit.ico" />
     <Resource Include="tools\PS3GBS - background all v01.png" />
     <Resource Include="tools\PS3GBS - BG v05 half.png" />
     <Resource Include="tools\PS3GBS.png" />
+    <SplashScreen Include="tools\Text Edit.png" />
+    <Resource Include="tools\Text Edit.ico" />
+    <Content Include="tools\Text Edit.svg" />
     <Content Include="tools\TextEdit.svg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -359,7 +359,7 @@
 
                                 </DockPanel>
                             </Button>
-                            <Button x:Name="button_Copy5"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
+                            <Button x:Name="button_Copy5" Visibility="Hidden" Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
                                 <DockPanel LastChildFill="True">
                                     <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
@@ -565,7 +565,7 @@
 
                     <Border Grid.Column="0" BorderThickness="1"  BorderBrush="{DynamicResource AccentColorBrush}">
 
-                        <ListBox Name="lbisotest" Background="Transparent" Grid.Column="0" SelectionChanged="lbtest_SelectionChanged" Width="200" 
+                        <ListBox Name="lbisotest" Background="Transparent" Grid.Column="0" SelectionChanged="lbisotest_SelectionChanged" Width="200" 
                       ItemsSource="{Binding}" HorizontalAlignment="Left">
 
 
@@ -706,7 +706,7 @@
                             <ListBox.ItemTemplate>
                             <DataTemplate>
 
-                                <StackPanel x:Name="plist"  MouseLeftButtonUp="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
+                                <StackPanel x:Name="plist2"  MouseLeftButtonUp="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
 
                                     <Image Height="100" Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <!-- <TextBox Width="180" Text="{Binding CID}" BorderThickness="0" IsReadOnly="True"/>
@@ -1430,7 +1430,7 @@
                             </DockPanel>
                         </Button>
 
-                        <Button x:Name="buttonud_Copy1" HorizontalAlignment="Left" Margin="578,40,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.505,0.15" Style="{StaticResource AccentedSquareButtonStyle}"  Click="buttonud_Click">
+                        <Button x:Name="buttonud_Copy1" Visibility="Hidden" HorizontalAlignment="Left" Margin="578,40,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.505,0.15" Style="{StaticResource AccentedSquareButtonStyle}"  Click="buttonud_Click">
                             <DockPanel LastChildFill="True">
                                 <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
@@ -1541,14 +1541,14 @@
                     <GroupBox x:Name="groupBox2" Header="ISO Settings" HorizontalAlignment="Center" Height="141" Margin="15,156,257,0" VerticalAlignment="Top" Width="520">
                         <Grid HorizontalAlignment="Left" Height="99" Margin="10,10,0,-3" VerticalAlignment="Top" Width="752">
                             <Label x:Name="label2" Content="ISO Directory" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                            <Button x:Name="button2" Content="Button" HorizontalAlignment="Left" Margin="421,40,0,0" VerticalAlignment="Top" Width="75" Click="button2_Click"/>
+                            <Button x:Name="button2" Content="Browse" HorizontalAlignment="Left" Margin="421,40,0,0" VerticalAlignment="Top" Width="75" Click="button2_Click"/>
                             <TextBox x:Name="textBox2" PreviewDragOver="textBox2_PreviewDragOver" PreviewDragEnter="textBox2_PreviewDragOver" PreviewDrop="textBox2_PreviewDrop" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="406"/>
                         </Grid>
                     </GroupBox>
                     <GroupBox x:Name="groupBox3" Header="Game File Settings" HorizontalAlignment="Center" Margin="15,302,257,0" Width="520" Height="141" VerticalAlignment="Top">
                         <Grid HorizontalAlignment="Left" Height="99" Margin="10,10,0,-3" VerticalAlignment="Top" Width="752">
                             <Label x:Name="label3" Content="Game Directory" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top"/>
-                            <Button x:Name="button3" Content="Button" HorizontalAlignment="Left" Margin="421,40,0,0" VerticalAlignment="Top" Width="75" Click="button3_Click"/>
+                            <Button x:Name="button3" Content="Browse" HorizontalAlignment="Left" Margin="421,40,0,0" VerticalAlignment="Top" Width="75" Click="button3_Click"/>
                             <TextBox x:Name="textBox" PreviewDragOver="textBox_PreviewDragOver" PreviewDragEnter="textBox_PreviewDragOver" PreviewDrop="textBox_PreviewDrop" HorizontalAlignment="Left" Height="23" Margin="10,41,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Width="406"/>
 
                         </Grid>
@@ -1622,7 +1622,7 @@
                 </Grid>
             </TabItem>
 
-            <TabItem Header="Trello">
+            <TabItem Header="Trello" Visibility="Hidden">
                 <TabItem.HeaderTemplate>
                     <DataTemplate>
                         <DockPanel LastChildFill="True">
