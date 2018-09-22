@@ -178,7 +178,7 @@ namespace PS3_Game_Tool
                  pkg_folder();
              }).Start();*/
             pkg_folder();
-            //open_iso_folder();
+            open_iso_folder();
             //SetupFolderWatchers
             SetupWatchers();
             StartWeb();
@@ -781,7 +781,7 @@ namespace PS3_Game_Tool
                     lvisosfo.Items.Clear();
                     
                     #endregion << PARAM.SFO >>
-                    string isos = sfo.Title;
+                    string isos = file.Name;
                     string isoscid = sfo.TitleID;
                     string isosz = SizeSuffix(file.Length);
 
@@ -1693,7 +1693,7 @@ namespace PS3_Game_Tool
 
         private void lbisotest_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
-            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
+            DataRowView item1 = this.lbisotest.SelectedItem as DataRowView;
 
             if (item1 != null)
             {
@@ -1715,45 +1715,12 @@ namespace PS3_Game_Tool
 
                 /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
 
-                #region << pkg2sfo >>
-                /*
-                try
-                {
-                    //we need the item info 
-                    //mainly we need to items location
-
-                    //This can be used to decrypt a pkg file
-                    PS3gbs.pkg2sfo PKGSFO = new PS3gbs.pkg2sfo();
-                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString(), "PARAM.SFO");//get pkg name
-
-                    
-
-                    //this will actually decrypt the item so we will need to clean the folder after moving the sfo 
-                    //this could be cleaner also we can actually instead of exacting the pkg we could always load sfo from the buffer in the exact code but this will work for now
-                    if (Directory.Exists(appPath + @"\temp\pkg"))
-                    {
-                        if (!Directory.Exists("Work"))
-                        {
-                            //create working directory
-                            Directory.CreateDirectory("Work");
-                        }
-                       
-                        //copy sfo to working folder
-                        File.Copy(appPath + @"\temp\pkg\" + items2[0].ToString().Replace(".pkg", "") + @"\PARAM.SFO", appPath + @"\Work\PARAM.SFO", true);
-
-                        //Directory.Delete(appPath + @"\temp\pkg");
-                        DeleteDirectory(appPath + @"\temp\pkg");
-
-                        
-                    }
-                }
-                catch(Exception ex)
-                {
-                    //this will propably break the code might need to be tweaked a bit 
-                }*/
+                
 
                 #region << PARAM.SFO >>
-                string path = appPath + @"\SFO\" + items2[0].ToString().Replace(".pkg", ".SFO");
+                string path = appPath + @"\SFO\" + items2[0].ToString();
+                path = path.Substring(0, path.Length - 3);
+                path = path + "SFO";
                 //this code will always work ! 
                 Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
                 lvisosfo.Items.Clear();
@@ -1763,8 +1730,7 @@ namespace PS3_Game_Tool
                 }
 
                 #endregion << PARAM.SFO >>
-
-                #endregion << pkg2sfo >> 
+ 
 
             }
         }
@@ -1948,6 +1914,11 @@ namespace PS3_Game_Tool
                     n++;
                 }
             }
+        }
+
+        private void lbgametest_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
         }
     }
 

@@ -708,8 +708,29 @@
 
                                 <StackPanel x:Name="plist2"  MouseLeftButtonUp="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
 
-                                    <Image Height="100" Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <!-- <TextBox Width="180" Text="{Binding CID}" BorderThickness="0" IsReadOnly="True"/>
+                                        <mah:Badged  BadgePlacementMode="TopLeft"   Badge="{Binding Path=text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+
+                                            <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </mah:Badged>
+                                        <TextBlock  Width="180" Text="{Binding CID}" Grid.Row="2" FontSize="12" Name="txtScrolling">
+                                            <TextBlock.RenderTransform>
+                                                <TranslateTransform x:Name="translate" />
+                                            </TextBlock.RenderTransform>
+                                            <TextBlock.Triggers>
+                                                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                    <BeginStoryboard>
+                                                        <Storyboard RepeatBehavior="Forever">
+                                                            <DoubleAnimation
+                                                                 From="120" To="-12"
+                                                                 Storyboard.TargetName="translate"
+                                                                 Storyboard.TargetProperty="X"
+                                                                 Duration="0:0:10" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger>
+                                            </TextBlock.Triggers>
+                                        </TextBlock>
+                                        <!-- <TextBox Width="180" Text="{Binding CID}" BorderThickness="0" IsReadOnly="True"/>
                             -->
                                 </StackPanel>
 
@@ -758,7 +779,7 @@
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                        FontSize="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=FontSize}"
                                        >
-                                        Extract PKG
+                                        Extract ISO
                                     </TextBlock>
 
                                 </DockPanel>
@@ -888,12 +909,14 @@
                         <ColumnDefinition Width="*" />
                     </Grid.ColumnDefinitions>
 
-                    <ListBox Name="lbgametest" Background="Transparent" Grid.Column="0" SelectionChanged="lbtest_SelectionChanged" Width="200" 
+                    <Border Grid.Column="0" BorderThickness="1"  BorderBrush="{DynamicResource AccentColorBrush}">
+
+                        <ListBox Name="lbgametest" Background="Transparent" Grid.Column="0" SelectionChanged="lbgametest_SelectionChanged" Width="200" 
                       ItemsSource="{Binding}" HorizontalAlignment="Left">
 
 
-                        <ListBox.ItemContainerStyle>
-                            <!--<Style TargetType="ListBoxItem">
+                            <ListBox.ItemContainerStyle>
+                                <!--<Style TargetType="ListBoxItem">
                                 <Setter Property="Background" Value="Transparent"/>
                                 <Style.Triggers>
                                     <Trigger Property="IsSelected" Value="True">
@@ -929,115 +952,140 @@
                                 </Style.Triggers>
                                 </Style>-->
 
-                            <Style TargetType="{x:Type ListBoxItem}">
-                                <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
-                                <Setter Property="BorderThickness" Value="0" />
-                                <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush}" />
-                                <Setter Property="Controls:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
-                                <Setter Property="Controls:ItemHelper.DisabledForegroundBrush" Value="{DynamicResource GrayNormalBrush}" />
-                                <Setter Property="Controls:ItemHelper.DisabledSelectedBackgroundBrush" Value="{DynamicResource GrayBrush7}" />
-                                <Setter Property="Controls:ItemHelper.DisabledSelectedForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
-                                <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource AccentColorBrush3}" />
-                                <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush}" />
-                                <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush2}" />
-                                <Setter Property="Controls:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
-                                <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
-                                <Setter Property="HorizontalContentAlignment" Value="Stretch" />
-                                <Setter Property="Margin" Value="0" />
-                                <Setter Property="MinHeight" Value="25" />
-                                <Setter Property="SnapsToDevicePixels" Value="True" />
-                                <Setter Property="Template">
-                                    <Setter.Value>
-                                        <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                                            <Border x:Name="Border"
+                                <Style TargetType="{x:Type ListBoxItem}">
+                                    <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="BorderThickness" Value="0" />
+                                    <Setter Property="Controls:ItemHelper.ActiveSelectionBackgroundBrush" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.ActiveSelectionForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.DisabledForegroundBrush" Value="{DynamicResource GrayNormalBrush}" />
+                                    <Setter Property="Controls:ItemHelper.DisabledSelectedBackgroundBrush" Value="{DynamicResource GrayBrush7}" />
+                                    <Setter Property="Controls:ItemHelper.DisabledSelectedForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.HoverBackgroundBrush" Value="{DynamicResource AccentColorBrush3}" />
+                                    <Setter Property="Controls:ItemHelper.HoverSelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush}" />
+                                    <Setter Property="Controls:ItemHelper.SelectedBackgroundBrush" Value="{DynamicResource AccentColorBrush2}" />
+                                    <Setter Property="Controls:ItemHelper.SelectedForegroundBrush" Value="{DynamicResource AccentSelectedColorBrush}" />
+                                    <Setter Property="Foreground" Value="{DynamicResource TextBrush}" />
+                                    <Setter Property="HorizontalContentAlignment" Value="Stretch" />
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="MinHeight" Value="25" />
+                                    <Setter Property="SnapsToDevicePixels" Value="True" />
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                                                <Border x:Name="Border"
                                                Background="Transparent"
                                                BorderBrush="{TemplateBinding  BorderBrush}"
                                                BorderThickness="{TemplateBinding BorderThickness}"
                                                SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}">
-                                                <Grid>
-                                                    <GridViewRowPresenter x:Name="PART_RowPresenter"
+                                                    <Grid>
+                                                        <GridViewRowPresenter x:Name="PART_RowPresenter"
                                                   VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                                   SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" />
-                                                    <ContentPresenter x:Name="PART_ContentPresenter"
+                                                        <ContentPresenter x:Name="PART_ContentPresenter"
                                               Margin="{TemplateBinding Padding}"
                                               HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}"
                                               VerticalAlignment="{TemplateBinding VerticalContentAlignment}"
                                               SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}"
                                               Visibility="Collapsed" />
-                                                </Grid>
-                                            </Border>
-                                            <ControlTemplate.Triggers>
-                                                <Trigger Property="GridView.ColumnCollection" Value="{x:Null}">
-                                                    <Setter TargetName="PART_ContentPresenter" Property="Visibility" Value="Visible" />
-                                                    <Setter TargetName="PART_RowPresenter" Property="Visibility" Value="Collapsed" />
-                                                </Trigger>
+                                                    </Grid>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="GridView.ColumnCollection" Value="{x:Null}">
+                                                        <Setter TargetName="PART_ContentPresenter" Property="Visibility" Value="Visible" />
+                                                        <Setter TargetName="PART_RowPresenter" Property="Visibility" Value="Collapsed" />
+                                                    </Trigger>
 
-                                                <Trigger Property="IsSelected" Value="True">
-                                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.SelectedForegroundBrush), Mode=OneWay}" />
-                                                    <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.SelectedBackgroundBrush), Mode=OneWay}" />
-                                                    <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
-                                                </Trigger>
-                                                <MultiTrigger>
-                                                    <MultiTrigger.Conditions>
-                                                        <Condition Property="IsSelected" Value="True" />
-                                                        <Condition Property="Selector.IsSelectionActive" Value="True" />
-                                                    </MultiTrigger.Conditions>
-                                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.ActiveSelectionForegroundBrush), Mode=OneWay}" />
-                                                    <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.ActiveSelectionBackgroundBrush), Mode=OneWay}" />
-                                                    <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
-                                                </MultiTrigger>
+                                                    <Trigger Property="IsSelected" Value="True">
+                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.SelectedForegroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.SelectedBackgroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                                    </Trigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsSelected" Value="True" />
+                                                            <Condition Property="Selector.IsSelectionActive" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.ActiveSelectionForegroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.ActiveSelectionBackgroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource HighlightBrush}" />
+                                                    </MultiTrigger>
 
-                                                <MultiTrigger>
-                                                    <MultiTrigger.Conditions>
-                                                        <Condition Property="IsMouseOver" Value="True" />
-                                                        <Condition Property="IsSelected" Value="True" />
-                                                    </MultiTrigger.Conditions>
-                                                    <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverSelectedBackgroundBrush), Mode=OneWay}" />
-                                                </MultiTrigger>
-                                                <MultiTrigger>
-                                                    <MultiTrigger.Conditions>
-                                                        <Condition Property="IsMouseOver" Value="True" />
-                                                        <Condition Property="IsSelected" Value="False" />
-                                                    </MultiTrigger.Conditions>
-                                                    <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverBackgroundBrush), Mode=OneWay}" />
-                                                </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverSelectedBackgroundBrush), Mode=OneWay}" />
+                                                    </MultiTrigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsMouseOver" Value="True" />
+                                                            <Condition Property="IsSelected" Value="False" />
+                                                        </MultiTrigger.Conditions>
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource TemplatedParent}, Path=(Controls:ItemHelper.HoverBackgroundBrush), Mode=OneWay}" />
+                                                    </MultiTrigger>
 
-                                                <Trigger Property="IsEnabled" Value="False">
-                                                    <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledForegroundBrush), Mode=OneWay}" />
-                                                    <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledBackgroundBrush), Mode=OneWay}" />
-                                                </Trigger>
-                                                <MultiTrigger>
-                                                    <MultiTrigger.Conditions>
-                                                        <Condition Property="IsEnabled" Value="False" />
-                                                        <Condition Property="IsSelected" Value="True" />
-                                                    </MultiTrigger.Conditions>
-                                                    <MultiTrigger.Setters>
-                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledSelectedForegroundBrush), Mode=OneWay}" />
-                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledSelectedBackgroundBrush), Mode=OneWay}" />
-                                                        <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource GrayBrush7}" />
-                                                    </MultiTrigger.Setters>
-                                                </MultiTrigger>
-                                            </ControlTemplate.Triggers>
-                                        </ControlTemplate>
-                                    </Setter.Value>
-                                </Setter>
-                                <Setter Property="VerticalContentAlignment" Value="Center" />
-                            </Style>
-                        </ListBox.ItemContainerStyle>
+                                                    <Trigger Property="IsEnabled" Value="False">
+                                                        <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledForegroundBrush), Mode=OneWay}" />
+                                                        <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledBackgroundBrush), Mode=OneWay}" />
+                                                    </Trigger>
+                                                    <MultiTrigger>
+                                                        <MultiTrigger.Conditions>
+                                                            <Condition Property="IsEnabled" Value="False" />
+                                                            <Condition Property="IsSelected" Value="True" />
+                                                        </MultiTrigger.Conditions>
+                                                        <MultiTrigger.Setters>
+                                                            <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledSelectedForegroundBrush), Mode=OneWay}" />
+                                                            <Setter TargetName="Border" Property="Background" Value="{Binding RelativeSource={RelativeSource Self}, Path=(Controls:ItemHelper.DisabledSelectedBackgroundBrush), Mode=OneWay}" />
+                                                            <Setter TargetName="Border" Property="BorderBrush" Value="{DynamicResource GrayBrush7}" />
+                                                        </MultiTrigger.Setters>
+                                                    </MultiTrigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Setter Property="VerticalContentAlignment" Value="Center" />
+                                </Style>
+                            </ListBox.ItemContainerStyle>
 
-                        <ListBox.ItemTemplate>
-                            <DataTemplate>
 
-                                <StackPanel x:Name="plist"  MouseLeftButtonUp="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
+                            <ListBox.ItemTemplate>
+                                <DataTemplate>
 
-                                    <Image Height="100" Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                    <!-- <TextBox Width="180" Text="{Binding CID}" BorderThickness="0" IsReadOnly="True"/>
+                                    <StackPanel x:Name="plist3"  MouseLeftButtonUp="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
+
+                                        <mah:Badged  BadgePlacementMode="TopLeft"   Badge="{Binding Path=text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+
+                                            <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </mah:Badged>
+                                        <TextBlock  Width="180" Text="{Binding CID}" Grid.Row="2" FontSize="12" Name="txtScrolling">
+                                            <TextBlock.RenderTransform>
+                                                <TranslateTransform x:Name="translate" />
+                                            </TextBlock.RenderTransform>
+                                            <TextBlock.Triggers>
+                                                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
+                                                    <BeginStoryboard>
+                                                        <Storyboard RepeatBehavior="Forever">
+                                                            <DoubleAnimation
+                                                                 From="120" To="-12"
+                                                                 Storyboard.TargetName="translate"
+                                                                 Storyboard.TargetProperty="X"
+                                                                 Duration="0:0:10" />
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </EventTrigger>
+                                            </TextBlock.Triggers>
+                                        </TextBlock>
+                                        <!-- <TextBox Width="180" Text="{Binding CID}" BorderThickness="0" IsReadOnly="True"/>
                             -->
-                                </StackPanel>
+                                    </StackPanel>
 
-                            </DataTemplate>
-                        </ListBox.ItemTemplate>
-                    </ListBox>
+                                </DataTemplate>
+                            </ListBox.ItemTemplate>
+                        </ListBox>
+                    </Border>
+
+
                     <GroupBox x:Name="groupBoxgameinfo" Grid.Column="1" Header="Game Info" HorizontalAlignment="Center" Height="147" Margin="0,20,0,0" VerticalAlignment="Top" Width="549">
                         <!--<Label x:Name="label4" Content="" Grid.Column="1" HorizontalAlignment="Center" Margin="0,10,0,0" VerticalAlignment="Top" FontSize="24"/>
                       -->
