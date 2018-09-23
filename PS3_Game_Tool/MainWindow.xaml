@@ -234,7 +234,7 @@
                                         <Border MouseEnter="plist_MouseEnter" MouseLeave="plist_MouseExit">
 
                                         <StackPanel x:Name="plist"  ToolTip="{Binding tool }">
-                                            <mah:Badged  BadgePlacementMode="TopLeft"   Badge="{Binding text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                            <mah:Badged MouseDoubleClick="Badged_MouseDoubleClick"  BadgePlacementMode="Left"   Badge="{Binding text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Margin="0" >
                                             
                                             <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                           </mah:Badged>
@@ -303,7 +303,7 @@
                             </ListBox.ItemContainerStyle>
 
 
-                            <Button x:Name="button_Copy"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
+                            <Button x:Name="button_Copy"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92" Click="button_Copy_Click">
                                 <DockPanel LastChildFill="True">
                                     <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
@@ -317,7 +317,7 @@
 
                                 </DockPanel>
                             </Button>
-                            <Button x:Name="button_Copy2"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
+                            <Button x:Name="button_Copy2"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92" Click="button_Copy2_Click">
                                 <DockPanel LastChildFill="True">
                                     <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
@@ -345,7 +345,7 @@
 
                                 </DockPanel>
                             </Button>
-                            <Button x:Name="button_Copy4"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92">
+                            <Button x:Name="button_Copy4"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,16,0,0" VerticalAlignment="Top" Width="92" Click="button_Copy4_Click">
                                 <DockPanel LastChildFill="True">
                                     <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
@@ -377,7 +377,7 @@
                         </ListBox>
 
                     </GroupBox>
-                    <WebBrowser Name="pkgwb" Grid.Column="1" Visibility="Visible" />
+                    <WebBrowser Name="pkgwb" Grid.Column="1" Visibility="Hidden" />
 
                 </Grid>
 
@@ -708,7 +708,7 @@
 
                                 <StackPanel x:Name="plist2"  ToolTip="{Binding tool }">
 
-                                        <mah:Badged  BadgePlacementMode="TopLeft"  Badge="{Binding text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                        <mah:Badged MouseDoubleClick="isoBadged_MouseDoubleClick" BadgePlacementMode="Left"  Badge="{Binding text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Margin="0" >
 
                                             <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </mah:Badged>
@@ -767,8 +767,16 @@
 
                     </GroupBox>
                     <GroupBox x:Name="groupBoxisotools" Grid.Column="1" Header="ISO Tools" HorizontalAlignment="Center" Margin="462,184,122,0" VerticalAlignment="Top" Width="208" MinHeight="200">
-                        <UniformGrid MinHeight="200">
-                            <Button x:Name="buttoniso"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="92">
+                        <ListBox Background="Transparent">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Style>
+
+                            </ListBox.ItemContainerStyle>
+                          
+                            
+                            <Button x:Name="buttoniso"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="92" Click="buttoniso_Click">
                                 <DockPanel LastChildFill="True">
                                     <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
@@ -784,7 +792,39 @@
 
                                 </DockPanel>
                             </Button>
-                        </UniformGrid>
+                           
+                            <Button x:Name="buttoniso2"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,10,-3,0" VerticalAlignment="Top" Width="92" Click="buttoniso2_Click">
+                                <DockPanel LastChildFill="True">
+                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>-->
+                                    <TextBlock VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                       FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                       ><Run Text="Check Updates"/></TextBlock>
+
+                                </DockPanel>
+                            </Button>
+
+                            <Button x:Name="buttoniso3"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,10,-3,0" VerticalAlignment="Top" Width="92" Click="buttoniso3_Click">
+                                <DockPanel LastChildFill="True">
+                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>-->
+                                    <TextBlock VerticalAlignment="Center"
+                                       Foreground="{Binding Foreground, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                       FontSize="{Binding FontSize, RelativeSource={RelativeSource AncestorType={x:Type Button}}}"
+                                       ><Run Text="Refresh ISO"/></TextBlock>
+
+                                </DockPanel>
+                            </Button>
+
+
+                        </ListBox>
 
                     </GroupBox>
 
@@ -1054,7 +1094,7 @@
 
                                     <StackPanel x:Name="plist3"   ToolTip="{Binding tool }">
 
-                                        <mah:Badged  BadgePlacementMode="TopLeft" Badge="{Binding text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                        <mah:Badged MouseDoubleClick="gameBadged_MouseDoubleClick" BadgePlacementMode="Left" Badge="{Binding text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" Padding="0" Grid.IsSharedSizeScope="False" Margin="0" >
 
                                             <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </mah:Badged>
@@ -1098,8 +1138,15 @@
 
                     </GroupBox>
                     <GroupBox x:Name="groupBoxgametools" Grid.Column="1" Header="Game File Tools" HorizontalAlignment="Center" Margin="462,184,122,0" VerticalAlignment="Top" Width="208" MinHeight="200">
-                        <UniformGrid MinHeight="200">
-                            <Button x:Name="buttongame"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="92">
+                        <ListBox Background="Transparent">
+                            <ListBox.ItemContainerStyle>
+                                <Style TargetType="ListBoxItem">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                </Style>
+
+                            </ListBox.ItemContainerStyle>
+                            
+                            <Button x:Name="buttongame"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="92" Click="buttongame_Click">
                                 <DockPanel LastChildFill="True">
                                     <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
                                         <Rectangle.OpacityMask>
@@ -1110,12 +1157,31 @@
                                        Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
                                        FontSize="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=FontSize}"
                                        >
-                                        Extract PKG
+                                        Check Updates
                                     </TextBlock>
 
                                 </DockPanel>
                             </Button>
-                        </UniformGrid>
+
+                            <Button x:Name="buttongame2"  Style="{StaticResource AccentedSquareButtonStyle}" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Width="92" Click="buttongame2_Click">
+                                <DockPanel LastChildFill="True">
+                                    <!-- <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}" >
+                                        <Rectangle.OpacityMask>
+                                            <VisualBrush Stretch="Fill" Visual="{StaticResource ThemeLightDark}" />
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>-->
+                                    <TextBlock VerticalAlignment="Center"
+                                       Foreground="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}"
+                                       FontSize="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=FontSize}"
+                                       >
+                                        Refresh Game
+                                    </TextBlock>
+
+                                </DockPanel>
+                            </Button>
+
+
+                        </ListBox>
 
                     </GroupBox>
 

@@ -179,12 +179,10 @@ namespace PS3_Game_Tool
              }).Start();*/
             pkg_folder();
             open_iso_folder();
-            open_game_folder();
-            //SetupFolderWatchers
+            open_game_folder(); 
             SetupWatchers();
             StartWeb();
-            //pkgwb.Navigate("http://www.psx-place.com");
-            //trellowb.Navigate("https://trello.com/b/2MJwFHNs/sony-stuff");
+
         }
 
         private void SetupWatchers()
@@ -312,7 +310,6 @@ namespace PS3_Game_Tool
             var main = (MainWindow)System.Windows.Application.Current.MainWindow;
             await main.ShowMetroDialogAsync(dialog);
         }
-
 
         private void GenerateImage(string bkImage, string cname)
         {
@@ -689,6 +686,12 @@ namespace PS3_Game_Tool
 
         private void open_iso_folder()
         {
+            dtiso2.Rows.Clear();
+            //should be wise to do this
+            dtiso2.Clear();
+            dtiso.Clear();
+            lbisotest.DataContext = dtiso2.DefaultView;
+            lvisoinfo.DataContext = dtiso2.DefaultView;
             int i2 = 0;
             appPath = appPath.Replace("PS3gbs.exe", "");
             if(iso_directory == "ISO")
@@ -1745,113 +1748,6 @@ namespace PS3_Game_Tool
         #endregion<<updater>>
 
         
-        public static void DeleteDirectory(string target_dir)
-        {
-            try
-            {
-                string[] files = Directory.GetFiles(target_dir);
-                string[] dirs = Directory.GetDirectories(target_dir);
-
-                foreach (string file in files)
-                {
-                    File.SetAttributes(file, FileAttributes.Normal);
-                    File.Delete(file);
-                }
-
-                foreach (string dir in dirs)
-                {
-                    DeleteDirectory(dir);
-                }
-
-                Directory.Delete(target_dir, false);
-            }
-            catch (Exception ex)
-            {
-
-            }
-        }
-
-        #region<<pkg_buttons>>
-
-        private void lbtest_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
-
-            if (item1 != null)
-            {
-                pkgwb.Visibility = Visibility.Hidden;
-                pkgwb.Dispose();
-                Object[] items2 = item1.Row.ItemArray;
-                string item = items2[4].ToString();
-                item = item.Replace(".PNG", ".PKG");
-                //this.label4.Content = items2[0].ToString();
-                lvpkginfo.Items.Clear();
-                int n = 0;
-                while (n < 4)
-                {
-                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
-                    //Object nob = items2[n];
-                    string t = items2[n].ToString();
-                    lvpkginfo.Items.Add(t1[n] + t);
-                    n++;
-                }
-
-                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
-
-                #region << pkg2sfo >>
-                /*
-                try
-                {
-                    //we need the item info 
-                    //mainly we need to items location
-
-                    //This can be used to decrypt a pkg file
-                    PS3gbs.pkg2sfo PKGSFO = new PS3gbs.pkg2sfo();
-                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString(), "PARAM.SFO");//get pkg name
-
-                    
-
-                    //this will actually decrypt the item so we will need to clean the folder after moving the sfo 
-                    //this could be cleaner also we can actually instead of exacting the pkg we could always load sfo from the buffer in the exact code but this will work for now
-                    if (Directory.Exists(appPath + @"\temp\pkg"))
-                    {
-                        if (!Directory.Exists("Work"))
-                        {
-                            //create working directory
-                            Directory.CreateDirectory("Work");
-                        }
-                       
-                        //copy sfo to working folder
-                        File.Copy(appPath + @"\temp\pkg\" + items2[0].ToString().Replace(".pkg", "") + @"\PARAM.SFO", appPath + @"\Work\PARAM.SFO", true);
-
-                        //Directory.Delete(appPath + @"\temp\pkg");
-                        DeleteDirectory(appPath + @"\temp\pkg");
-
-                        
-                    }
-                }
-                catch(Exception ex)
-                {
-                    //this will propably break the code might need to be tweaked a bit 
-                }*/
-
-                #region << PARAM.SFO >>
-                string path = appPath + @"\SFO\" + items2[0].ToString().Replace(".pkg", ".SFO");
-                //this code will always work ! 
-                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
-                lvpkgsfo.Items.Clear();
-                foreach (var psfoitem in sfo.Tables)
-                {
-                    lvpkgsfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
-                }
-
-                #endregion << PARAM.SFO >>
-
-                #endregion << pkg2sfo >> 
-
-            }
-        }
-
         private void Button_Click_1(object sender, RoutedEventArgs e)
         {
             this.metroAnimatedTabControl.Visibility = Visibility.Visible;
@@ -1865,144 +1761,6 @@ namespace PS3_Game_Tool
             //this.gridInfo1.Visibility = Visibility.Visible;
             this.metroAnimatedTabControl.Visibility = Visibility.Hidden;
         }
-
-
-        private void button_Copy3_Click(object sender, RoutedEventArgs e)
-        {
-            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
-
-            if (item1 != null)
-            {
-
-                Object[] items2 = item1.Row.ItemArray;
-                // string item = items2[4].ToString();
-                //item = item.Replace(".PNG", ".PKG");
-                //this.label4.Content = items2[0].ToString();
-                //lvpkginfo.Items.Clear();
-                int n = 0;
-                while (n < 4)
-                {
-                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
-                    //Object nob = items2[n];
-                    string t = items2[n].ToString();
-
-                    //lvpkginfo.Items.Add(t1[n] + t);
-                    if (n == 1)
-                    {
-                        string tid = t.Remove(0, 7);
-                        tid = tid.Remove(9, 20);
-                        textBoxud.Text = tid;
-                        buttonud.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                        metroAnimatedTabControl.SelectedValue = updtab;
-                    }
-                    n++;
-                }
-            }
-        }
-
-
-        #endregion<<pkg_buttons>>
-
-        #region<<iso_buttons>>
-
-        private void lbisotest_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            DataRowView item1 = this.lbisotest.SelectedItem as DataRowView;
-
-            if (item1 != null)
-            {
-               
-                Object[] items2 = item1.Row.ItemArray;
-                string item = items2[4].ToString();
-                item = item.Replace(".PNG", ".PKG");
-                //this.label4.Content = items2[0].ToString();
-                lvisoinfo.Items.Clear();
-                int n = 0;
-                while (n < 4)
-                {
-                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
-                    //Object nob = items2[n];
-                    string t = items2[n].ToString();
-                    lvisoinfo.Items.Add(t1[n] + t);
-                    n++;
-                }
-
-                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
-
-                
-
-                #region << PARAM.SFO >>
-                string path = appPath + @"\SFO\" + items2[0].ToString();
-                path = path.Substring(0, path.Length - 3);
-                path = path + "SFO";
-                //this code will always work ! 
-                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
-                lvisosfo.Items.Clear();
-                foreach (var psfoitem in sfo.Tables)
-                {
-                    lvisosfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
-                }
-
-                #endregion << PARAM.SFO >>
- 
-
-            }
-        }
-
-
-        #endregion<<iso_buttons>>
-
-        #region<<game_buttons>>
-
-
-        private void lbgametest_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-            DataRowView item1 = this.lbgametest.SelectedItem as DataRowView;
-
-            if (item1 != null)
-            {
-
-                Object[] items2 = item1.Row.ItemArray;
-                string item = items2[4].ToString();
-                item = item.Replace(".PNG", ".PKG");
-                //this.label4.Content = items2[0].ToString();
-                lvgameinfo.Items.Clear();
-                int n = 0;
-                while (n < 4)
-                {
-                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
-                    //Object nob = items2[n];
-                    string t = items2[n].ToString();
-                    lvgameinfo.Items.Add(t1[n] + t);
-                    n++;
-                }
-
-                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
-
-
-
-                #region << PARAM.SFO >>
-                string path = appPath + @"\SFO\" + items2[0].ToString();
-               // path = path.Substring(0, path.Length - 3);
-                path = path + ".SFO";
-                //this code will always work ! 
-                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
-                lvgamesfo.Items.Clear();
-                foreach (var psfoitem in sfo.Tables)
-                {
-                    lvgamesfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
-                }
-
-                #endregion << PARAM.SFO >>
-
-
-            }
-        }
-
-
-        #endregion<<game_buttons>>
-
 
         private void plist_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
         {
@@ -2150,6 +1908,31 @@ namespace PS3_Game_Tool
             // lbtest.Focus();
         }
 
+        public static void DeleteDirectory(string target_dir)
+        {
+            try
+            {
+                string[] files = Directory.GetFiles(target_dir);
+                string[] dirs = Directory.GetDirectories(target_dir);
+
+                foreach (string file in files)
+                {
+                    File.SetAttributes(file, FileAttributes.Normal);
+                    File.Delete(file);
+                }
+
+                foreach (string dir in dirs)
+                {
+                    DeleteDirectory(dir);
+                }
+
+                Directory.Delete(target_dir, false);
+            }
+            catch (Exception ex)
+            {
+
+            }
+        }
 
         private static long GetDirectorySize(string folderPath)
         {
@@ -2157,8 +1940,503 @@ namespace PS3_Game_Tool
             return di.EnumerateFiles("*.*", SearchOption.AllDirectories).Sum(fi => fi.Length);
         }
 
+        #region<<pkg_buttons>>
+
+        private void lbtest_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+                pkgwb.Visibility = Visibility.Hidden;
+                pkgwb.Dispose();
+                Object[] items2 = item1.Row.ItemArray;
+                string item = items2[4].ToString();
+                item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                lvpkginfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+                    lvpkginfo.Items.Add(t1[n] + t);
+                    n++;
+                }
+
+                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
+
+                #region << pkg2sfo >>
+                /*
+                try
+                {
+                    //we need the item info 
+                    //mainly we need to items location
+
+                    //This can be used to decrypt a pkg file
+                    PS3gbs.pkg2sfo PKGSFO = new PS3gbs.pkg2sfo();
+                    PKGSFO.DecryptPKGFile(appPath + "/Pkg/" + items2[0].ToString(), "PARAM.SFO");//get pkg name
+
+                    
+
+                    //this will actually decrypt the item so we will need to clean the folder after moving the sfo 
+                    //this could be cleaner also we can actually instead of exacting the pkg we could always load sfo from the buffer in the exact code but this will work for now
+                    if (Directory.Exists(appPath + @"\temp\pkg"))
+                    {
+                        if (!Directory.Exists("Work"))
+                        {
+                            //create working directory
+                            Directory.CreateDirectory("Work");
+                        }
+                       
+                        //copy sfo to working folder
+                        File.Copy(appPath + @"\temp\pkg\" + items2[0].ToString().Replace(".pkg", "") + @"\PARAM.SFO", appPath + @"\Work\PARAM.SFO", true);
+
+                        //Directory.Delete(appPath + @"\temp\pkg");
+                        DeleteDirectory(appPath + @"\temp\pkg");
+
+                        
+                    }
+                }
+                catch(Exception ex)
+                {
+                    //this will propably break the code might need to be tweaked a bit 
+                }*/
+
+                #region << PARAM.SFO >>
+                string path = appPath + @"\SFO\" + items2[0].ToString().Replace(".pkg", ".SFO");
+                //this code will always work ! 
+                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
+                lvpkgsfo.Items.Clear();
+                foreach (var psfoitem in sfo.Tables)
+                {
+                    lvpkgsfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
+                }
+
+                #endregion << PARAM.SFO >>
+
+                #endregion << pkg2sfo >> 
+
+            }
+        }
+
+        private void button_Copy_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
 
 
+                Object[] items2 = item1.Row.ItemArray;
+
+                string pkg = items2[0].ToString();
+
+
+
+            }
+        }
+
+        private void button_Copy2_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void button_Copy3_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+                Object[] items2 = item1.Row.ItemArray;
+                // string item = items2[4].ToString();
+                //item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                //lvpkginfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+
+                    //lvpkginfo.Items.Add(t1[n] + t);
+                    if (n == 1)
+                    {
+                        string tid = t.Remove(0, 7);
+                        tid = tid.Remove(9, 20);
+                        textBoxud.Text = tid;
+                        buttonud.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        metroAnimatedTabControl.SelectedValue = updtab;
+                    }
+                    n++;
+                }
+            }
+        }
+
+        private void button_Copy4_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+
+                Object[] items2 = item1.Row.ItemArray;
+                string item = items2[4].ToString();
+                item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                // lvpkginfo.Items.Clear();
+
+
+                string sfo = items2[0].ToString();
+
+
+                sfo = sfo.Substring(0, sfo.Length - 3);
+
+                sfo = sfo + "SFO";
+
+
+                if (File.Exists("SFO/" + sfo))
+                {
+                    File.Delete("SFO/" + sfo);
+                }
+
+
+                pkg_folder();
+            }
+        }
+
+        private void Badged_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+                Object[] items2 = item1.Row.ItemArray;
+                // string item = items2[4].ToString();
+                //item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                //lvpkginfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+
+                    //lvpkginfo.Items.Add(t1[n] + t);
+                    if (n == 1)
+                    {
+                        string tid = t.Remove(0, 7);
+                        tid = tid.Remove(9, 20);
+                        textBoxud.Text = tid;
+                        buttonud.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        metroAnimatedTabControl.SelectedValue = updtab;
+                    }
+                    n++;
+                }
+            }
+        }
+
+        #endregion<<pkg_buttons>>
+       
+        #region<<iso_buttons>>
+
+        private void lbisotest_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            DataRowView item1 = this.lbisotest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+               
+                Object[] items2 = item1.Row.ItemArray;
+                string item = items2[4].ToString();
+                item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                lvisoinfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+                    lvisoinfo.Items.Add(t1[n] + t);
+                    n++;
+                }
+
+                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
+
+                
+
+                #region << PARAM.SFO >>
+                string path = appPath + @"\SFO\" + items2[0].ToString();
+                path = path.Substring(0, path.Length - 3);
+                path = path + "SFO";
+                //this code will always work ! 
+                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
+                lvisosfo.Items.Clear();
+                foreach (var psfoitem in sfo.Tables)
+                {
+                    lvisosfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
+                }
+
+                #endregion << PARAM.SFO >>
+ 
+
+            }
+        }
+
+        private void buttoniso_Click(object sender, RoutedEventArgs e)
+        {
+
+        }
+
+        private void buttoniso2_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView item1 = this.lbisotest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+                Object[] items2 = item1.Row.ItemArray;
+                // string item = items2[4].ToString();
+                //item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                //lvpkginfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+
+                    //lvpkginfo.Items.Add(t1[n] + t);
+                    if (n == 1)
+                    {
+                        string tid = t;
+                        textBoxud.Text = tid;
+                        buttonud.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        metroAnimatedTabControl.SelectedValue = updtab;
+                    }
+                    n++;
+                }
+            }
+        }
+
+        private void isoBadged_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataRowView item1 = this.lbisotest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+                Object[] items2 = item1.Row.ItemArray;
+                // string item = items2[4].ToString();
+                //item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                //lvpkginfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+
+                    //lvpkginfo.Items.Add(t1[n] + t);
+                    if (n == 1)
+                    {
+                        string tid = t; 
+                        textBoxud.Text = tid;
+                        buttonud.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        metroAnimatedTabControl.SelectedValue = updtab;
+                    }
+                    n++;
+                }
+            }
+        }
+
+        #endregion<<iso_buttons>>
+
+        #region<<game_buttons>>
+
+        private void lbgametest_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            DataRowView item1 = this.lbgametest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+                Object[] items2 = item1.Row.ItemArray;
+                string item = items2[4].ToString();
+                item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                lvgameinfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+                    lvgameinfo.Items.Add(t1[n] + t);
+                    n++;
+                }
+
+                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
+
+
+
+                #region << PARAM.SFO >>
+                string path = appPath + @"\SFO\" + items2[0].ToString();
+               // path = path.Substring(0, path.Length - 3);
+                path = path + ".SFO";
+                //this code will always work ! 
+                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
+                lvgamesfo.Items.Clear();
+                foreach (var psfoitem in sfo.Tables)
+                {
+                    lvgamesfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
+                }
+
+                #endregion << PARAM.SFO >>
+
+
+            }
+        }
+
+        private void buttongame_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView item1 = this.lbgametest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+                Object[] items2 = item1.Row.ItemArray;
+                // string item = items2[4].ToString();
+                //item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                //lvpkginfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+
+                    //lvpkginfo.Items.Add(t1[n] + t);
+                    if (n == 1)
+                    {
+                        string tid = t;
+                        textBoxud.Text = tid;
+                        buttonud.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        metroAnimatedTabControl.SelectedValue = updtab;
+                    }
+                    n++;
+                }
+            }
+        }
+
+
+        private void gameBadged_MouseDoubleClick(object sender, MouseButtonEventArgs e)
+        {
+            DataRowView item1 = this.lbgametest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+                Object[] items2 = item1.Row.ItemArray;
+                // string item = items2[4].ToString();
+                //item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                //lvpkginfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+
+                    //lvpkginfo.Items.Add(t1[n] + t);
+                    if (n == 1)
+                    {
+                        string tid = t;
+                        textBoxud.Text = tid;
+                        buttonud.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        metroAnimatedTabControl.SelectedValue = updtab;
+                    }
+                    n++;
+                }
+            }
+        }
+
+        #endregion<<game_buttons>>
+
+        private void buttoniso3_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView item1 = this.lbisotest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+
+                Object[] items2 = item1.Row.ItemArray;
+                string item = items2[0].ToString();
+                item = item.Replace(".PNG", ".iso");
+                //this.label4.Content = items2[0].ToString();
+                // lvpkginfo.Items.Clear();
+
+
+                string sfo = items2[0].ToString();
+
+
+                sfo = sfo.Substring(0, sfo.Length - 3);
+
+                sfo = sfo + "SFO";
+
+
+                if (File.Exists("SFO/" + sfo))
+                {
+                    File.Delete("SFO/" + sfo);
+                }
+
+
+                open_iso_folder();
+                
+            }
+        }
+
+        private void buttongame2_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView item1 = this.lbgametest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+
+                Object[] items2 = item1.Row.ItemArray;
+               
+
+                string sfo = items2[0].ToString();
+
+
+                sfo = sfo.Substring(0, sfo.Length - 3);
+
+                sfo = sfo + "SFO";
+
+
+                if (File.Exists("SFO/" + sfo))
+                {
+                    File.Delete("SFO/" + sfo);
+                }
+
+
+                open_game_folder();
+            }
+        }
     }
 
 }
