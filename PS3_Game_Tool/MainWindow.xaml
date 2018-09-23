@@ -566,7 +566,7 @@
                     <Border Grid.Column="0" BorderThickness="1"  BorderBrush="{DynamicResource AccentColorBrush}">
 
                         <ListBox Name="lbisotest" Background="Transparent" Grid.Column="0" SelectionChanged="lbisotest_SelectionChanged" Width="200" 
-                      ItemsSource="{Binding}" HorizontalAlignment="Left">
+                      ItemsSource="{Binding}" HorizontalAlignment="Left" FlowDirection="RightToLeft">
 
 
                             <ListBox.ItemContainerStyle>
@@ -712,8 +712,8 @@
 
                                             <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </mah:Badged>
-                                        <TextBlock  Width="180" Text="{Binding CID}" Grid.Row="2" FontSize="12" Name="txtScrolling">
-                                            <TextBlock.RenderTransform>
+                                        <TextBlock  Width="Auto" Text="{Binding CID}" Grid.Row="2" Name="txtScrolling" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                        <!--   <TextBlock.RenderTransform>
                                                 <TranslateTransform x:Name="translate" />
                                             </TextBlock.RenderTransform>
                                             <TextBlock.Triggers>
@@ -729,7 +729,7 @@
                                                     </BeginStoryboard>
                                                 </EventTrigger>
                                             </TextBlock.Triggers>
-                                        </TextBlock>
+                                        </TextBlock>-->
                                         <!-- <TextBox Width="180" Text="{Binding CID}" BorderThickness="0" IsReadOnly="True"/>
                             -->
                                 </StackPanel>
@@ -912,7 +912,7 @@
                     <Border Grid.Column="0" BorderThickness="1"  BorderBrush="{DynamicResource AccentColorBrush}">
 
                         <ListBox Name="lbgametest" Background="Transparent" Grid.Column="0" SelectionChanged="lbgametest_SelectionChanged" Width="200" 
-                      ItemsSource="{Binding}" HorizontalAlignment="Left">
+                      ItemsSource="{Binding}" HorizontalAlignment="Left" FlowDirection="RightToLeft">
 
 
                             <ListBox.ItemContainerStyle>
@@ -1058,24 +1058,8 @@
 
                                             <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </mah:Badged>
-                                        <TextBlock  Width="180" Text="{Binding CID}" Grid.Row="2" FontSize="12" Name="txtScrolling">
-                                            <TextBlock.RenderTransform>
-                                                <TranslateTransform x:Name="translate" />
-                                            </TextBlock.RenderTransform>
-                                            <TextBlock.Triggers>
-                                                <EventTrigger RoutedEvent="FrameworkElement.Loaded">
-                                                    <BeginStoryboard>
-                                                        <Storyboard RepeatBehavior="Forever">
-                                                            <DoubleAnimation
-                                                                 From="120" To="-12"
-                                                                 Storyboard.TargetName="translate"
-                                                                 Storyboard.TargetProperty="X"
-                                                                 Duration="0:0:10" />
-                                                        </Storyboard>
-                                                    </BeginStoryboard>
-                                                </EventTrigger>
-                                            </TextBlock.Triggers>
-                                        </TextBlock>
+                                        <TextBlock  Width="Auto" Text="{Binding CID}" Grid.Row="2"  Name="txtScrolling" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+
                                         <!-- <TextBox Width="180" Text="{Binding CID}" BorderThickness="0" IsReadOnly="True"/>
                             -->
                                     </StackPanel>

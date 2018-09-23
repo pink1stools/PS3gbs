@@ -179,6 +179,7 @@ namespace PS3_Game_Tool
              }).Start();*/
             pkg_folder();
             open_iso_folder();
+            open_game_folder();
             //SetupFolderWatchers
             SetupWatchers();
             StartWeb();
@@ -619,7 +620,7 @@ namespace PS3_Game_Tool
                                 dr["icon"] = iconpath;
                                 dr["tool"] = "  " + s + "  " + scid + "  " + sz;
                                 dr["count"] = i;
-                                dr["bl"] = "0.0";
+                                dr["bl"] = tid;
                                 dr["tileh"] = "50";
                                 dr["tilew"] = "800";
                                 dr["column1w"] = "150";
@@ -845,20 +846,95 @@ namespace PS3_Game_Tool
 
         private void open_game_folder()
         {
+            int i3 = 0;
             appPath = appPath.Replace("PS3gbs.exe", "");
-            dinfo = new DirectoryInfo(appPath);
-            
+            if (game_directory == "Game Files")
+            {
+                game_directory = appPath + game_directory;
+            }
+            dinfo = new DirectoryInfo(game_directory);
+
             directories = Directory.GetDirectories(game_directory);
 
             foreach (string directoriy in directories)
             {
-                if (File.Exists(directoriy + "\\PS3_GAME\\PARAM.SFO"))
+                if (File.Exists(directoriy + "\\PS3_GAME\\PARAM.SFO") && File.Exists(directoriy + "\\PS3_GAME\\ICON0.png"))
                 {
-                    File.Copy(directoriy + "\\PS3_GAME\\PARAM.SFO", "SFO/" + directoriy + ".SFO");
-                    if (File.Exists(directoriy + "\\PS3_GAME\\ICON0.png"))
-                    {
-                        File.Copy(directoriy + "\\PS3_GAME\\ICON0.png", "icons/" + directoriy + ".PNG");
+                    string dname = directoriy.Replace(game_directory, "");
+                    File.Copy(directoriy + "\\PS3_GAME\\PARAM.SFO", appPath + "SFO/" + dname + ".SFO", true);
+                    
+                    File.Copy(directoriy + "\\PS3_GAME\\ICON0.png", appPath + "icons/" + dname + ".PNG", true);
 
+                    
+
+                    if (File.Exists(appPath + "SFO/" + dname + ".SFO"))
+                    {
+
+
+                        //Add to list
+                        #region << PARAM.SFO >>
+                        string path = appPath + "SFO/" + dname + ".SFO";
+                        //this code will always work ! 
+                        Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
+                        //string cid = sfo.Tables[0];
+
+                        lvisosfo.Items.Clear();
+
+                        #endregion << PARAM.SFO >>
+                        string games = dname.Trim('\\');
+                        string gamescid = sfo.TitleID;
+                        string gamesz = SizeSuffix(GetDirectorySize( directoriy));
+
+                        DataRow dr1 = dtgame.NewRow();
+                        dr1["IsSelected"] = false;
+                        dr1["Name"] = games;
+                        dr1["CID"] = gamescid;
+                        dr1["type"] = null;
+                        dr1["Size"] = gamesz;
+                        dtgame.Rows.Add(dr1);
+
+                        //dataGrid2.DataContext = dtpkg.DefaultView;
+
+                        string iconpath = appPath + "icons/" + dname + ".PNG";
+
+                        if (!File.Exists(iconpath))
+                        {
+                            iconpath = appPath + "icons/download.png";
+                        }
+
+
+
+
+                        DataRow dr = dtgame2.NewRow();
+                        dr["Name"] = games;
+                        dr["CID"] = gamescid;
+                        dr["type"] = 0;
+                        dr["size"] = gamesz;
+                        dr["icon"] = iconpath;
+                        dr["tool"] = "  " + games + "  " + gamescid + "  ";
+                        dr["count"] = i3;
+                        dr["bl"] = "0.0";
+                        dr["tileh"] = "50";
+                        dr["tilew"] = "800";
+                        dr["column1w"] = "150";
+                        dr["column2w"] = "650";
+                        dr["roww"] = "25";
+                        dr["imags"] = "50";
+                        //dr["text1s"] = upc;
+                        dr["text2s"] = "true";
+
+
+
+                        //dr["text1s"] = upc;
+                        dtgame2.Rows.Add(dr);
+
+
+                        //VisitPlanItems.DataContext = dtpkg2.DefaultView;
+                        lbgametest.DataContext = dtgame2.DefaultView;
+                        lvgameinfo.DataContext = dtgame2.DefaultView;
+
+
+                        i3++;
                     }
 
                 }
@@ -1919,7 +1995,57 @@ namespace PS3_Game_Tool
         private void lbgametest_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
 
+            DataRowView item1 = this.lbgametest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+                Object[] items2 = item1.Row.ItemArray;
+                string item = items2[4].ToString();
+                item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                lvgameinfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+                    lvgameinfo.Items.Add(t1[n] + t);
+                    n++;
+                }
+
+                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
+
+
+
+                #region << PARAM.SFO >>
+                string path = appPath + @"\SFO\" + items2[0].ToString();
+               // path = path.Substring(0, path.Length - 3);
+                path = path + ".SFO";
+                //this code will always work ! 
+                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
+                lvgamesfo.Items.Clear();
+                foreach (var psfoitem in sfo.Tables)
+                {
+                    lvgamesfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
+                }
+
+                #endregion << PARAM.SFO >>
+
+
+            }
         }
+
+
+        private static long GetDirectorySize(string folderPath)
+        {
+            DirectoryInfo di = new DirectoryInfo(folderPath);
+            return di.EnumerateFiles("*.*", SearchOption.AllDirectories).Sum(fi => fi.Length);
+        }
+
+
+
     }
 
 }
