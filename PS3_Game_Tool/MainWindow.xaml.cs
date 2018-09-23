@@ -62,7 +62,7 @@ namespace PS3_Game_Tool
         string color;
         string ctheme = "BaseDark";
 
-        Nullable<int> upc = null;
+       
         FileInfo[] Files;
         FileInfo[] Files2;
         string[] directories;
@@ -803,9 +803,9 @@ namespace PS3_Game_Tool
                         iconpath = appPath + "icons/download.png";
                     }
 
-                   
 
 
+                    cisoupdates(isoscid, i2);
                     DataRow dr = dtiso2.NewRow();
                     dr["Name"] = isos;
                     dr["CID"] = isoscid;
@@ -904,7 +904,7 @@ namespace PS3_Game_Tool
 
 
 
-
+                        cgameupdates(gamescid, i3);
                         DataRow dr = dtgame2.NewRow();
                         dr["Name"] = games;
                         dr["CID"] = gamescid;
@@ -1521,11 +1521,11 @@ namespace PS3_Game_Tool
             ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
             //  Make a new webClient to get the xml file and get/parse it on another thread.
             WebClient wc = new WebClient();
-           // wc.DownloadStringCompleted += cupHttpsCompleted;
+            // wc.DownloadStringCompleted += cupHttpsCompleted;
 
-           // wc.DownloadStringAsync(new Uri(webUrl));
+            // wc.DownloadStringAsync(new Uri(webUrl));
 
-
+            Nullable<int> upc = null;
             wc.DownloadStringCompleted += (sender1, e1) =>
             {
 
@@ -1586,79 +1586,192 @@ namespace PS3_Game_Tool
 
         }
 
-    
 
 
-        private void cupHttpsCompleted(object sender, DownloadStringCompletedEventArgs e)
+        private void cisoupdates(string cid, int count)
         {
-            //dtud.Rows.Clear();
-            // textBox3.Text = "";
-            //  Check if it downloaded the xml file ok
-            if (e.Error == null)
+            //  Set up the url of the xml file containing the game updates
+            webUrl = "https://a0.ww.np.dl.playstation.net/tpl/np/" + cid + "/" + cid + "-ver.xml";
+            //  Update status..
+            //lbl_Url.Text = "fetching... " + webUrl;
+            //  Needed to allow the certificate
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            //  Make a new webClient to get the xml file and get/parse it on another thread.
+            WebClient wc = new WebClient();
+            // wc.DownloadStringCompleted += cupHttpsCompleted;
+
+            // wc.DownloadStringAsync(new Uri(webUrl));
+
+            Nullable<int> upc = null;
+            wc.DownloadStringCompleted += (sender1, e1) =>
             {
-                //  Make an new XmlDocument
-                XmlDocument xdoc = new XmlDocument();
-                // Gotta love try :P
-                try
+
+
+                if (e1.Error == null)
                 {
+                    //  Make an new XmlDocument
+                    XmlDocument xdoc = new XmlDocument();
+                    // Gotta love try :P
                     //  Load the xml file from e.Result into the XmlDoc
-                    xdoc.LoadXml(e.Result);
-                    //  Make nodeList to hold all the Package Elements
-                    XmlNodeList elemList = xdoc.GetElementsByTagName("package");
-                    //  Loop through the list and get each entry
-                    upc = elemList.Count;
-                    for (int i = 0; i < elemList.Count; i++)
+
+                    try
                     {
+                        xdoc.LoadXml(e1.Result);
+                        //  Make nodeList to hold all the Package Elements
+                        XmlNodeList elemList = xdoc.GetElementsByTagName("package");
+                        //  Loop through the list and get each entry
+
+                        if (elemList.Count != 0) // if id==2
+                        {
+                            upc = elemList.Count;                   //break; break or not depending on you
+                        }
+                        else
+                        {
+                            upc = null;
+                        }
 
 
 
+                        foreach (DataRow dr in dtiso2.Rows) // search whole table
+                        {
+                            if (Convert.ToInt32(dr["count"]) == count) // if id==2
+                            {
+                                dr["text1s"] = upc; //change the name
+                                                    //break; break or not depending on you
+                            }
+
+                        }
+                        if (elemList.Count == 0)
+                        {
 
 
-
-
-
+                        }
                     }
 
+                    catch (Exception a)
+                    {
+
+                        //  Show error
+                        //showError();
+                    }
 
                 }
-                //  If error..
-                catch (Exception a)
-                {
 
-                    //  Show error
-                    //showError();
-                }
-            }
-            else // If error..
-            {
+            };
 
-                //  Show error
-                //showError();
-            }
+            wc.DownloadStringAsync(new Uri(webUrl));
+
         }
 
 
+        private void cgameupdates(string cid, int count)
+        {
+            //  Set up the url of the xml file containing the game updates
+            webUrl = "https://a0.ww.np.dl.playstation.net/tpl/np/" + cid + "/" + cid + "-ver.xml";
+            //  Update status..
+            //lbl_Url.Text = "fetching... " + webUrl;
+            //  Needed to allow the certificate
+            ServicePointManager.ServerCertificateValidationCallback = delegate { return true; };
+            //  Make a new webClient to get the xml file and get/parse it on another thread.
+            WebClient wc = new WebClient();
+            // wc.DownloadStringCompleted += cupHttpsCompleted;
+
+            // wc.DownloadStringAsync(new Uri(webUrl));
+
+            Nullable<int> upc = null;
+            wc.DownloadStringCompleted += (sender1, e1) =>
+            {
+
+
+                if (e1.Error == null)
+                {
+                    //  Make an new XmlDocument
+                    XmlDocument xdoc = new XmlDocument();
+                    // Gotta love try :P
+                    //  Load the xml file from e.Result into the XmlDoc
+
+                    try
+                    {
+                        xdoc.LoadXml(e1.Result);
+                        //  Make nodeList to hold all the Package Elements
+                        XmlNodeList elemList = xdoc.GetElementsByTagName("package");
+                        //  Loop through the list and get each entry
+
+                        if (elemList.Count != 0) // if id==2
+                        {
+                            upc = elemList.Count;                   //break; break or not depending on you
+                        }
+                        else
+                        {
+                            upc = null;
+                        }
+
+
+
+                        foreach (DataRow dr in dtgame2.Rows) // search whole table
+                        {
+                            if (Convert.ToInt32(dr["count"]) == count) // if id==2
+                            {
+                                dr["text1s"] = upc; //change the name
+                                                    //break; break or not depending on you
+                            }
+
+                        }
+                        if (elemList.Count == 0)
+                        {
+
+
+                        }
+                    }
+
+                    catch (Exception a)
+                    {
+
+                        //  Show error
+                        //showError();
+                    }
+
+                }
+
+            };
+
+            wc.DownloadStringAsync(new Uri(webUrl));
+
+        }
+
+
+        
 
         #endregion<<updater>>
 
-        private void Button_Click_1(object sender, RoutedEventArgs e)
+        
+        public static void DeleteDirectory(string target_dir)
         {
-            this.metroAnimatedTabControl.Visibility = Visibility.Visible;
-            //this.gridInfo1.Visibility = Visibility.Hidden;
-            this.gridInfo2.Visibility = Visibility.Hidden;
-            this.gridInfo3.Visibility = Visibility.Hidden;
+            try
+            {
+                string[] files = Directory.GetFiles(target_dir);
+                string[] dirs = Directory.GetDirectories(target_dir);
+
+                foreach (string file in files)
+                {
+                    File.SetAttributes(file, FileAttributes.Normal);
+                    File.Delete(file);
+                }
+
+                foreach (string dir in dirs)
+                {
+                    DeleteDirectory(dir);
+                }
+
+                Directory.Delete(target_dir, false);
+            }
+            catch (Exception ex)
+            {
+
+            }
         }
 
-        private void Button_Click_2(object sender, RoutedEventArgs e)
-        {
-            //this.gridInfo1.Visibility = Visibility.Visible;
-            this.metroAnimatedTabControl.Visibility = Visibility.Hidden;
-        }
-
-        private void StackPanel_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-
-        }
+        #region<<pkg_buttons>>
 
         private void lbtest_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1739,33 +1852,58 @@ namespace PS3_Game_Tool
             }
         }
 
-        public static void DeleteDirectory(string target_dir)
+        private void Button_Click_1(object sender, RoutedEventArgs e)
         {
-            try
+            this.metroAnimatedTabControl.Visibility = Visibility.Visible;
+            //this.gridInfo1.Visibility = Visibility.Hidden;
+            this.gridInfo2.Visibility = Visibility.Hidden;
+            this.gridInfo3.Visibility = Visibility.Hidden;
+        }
+
+        private void Button_Click_2(object sender, RoutedEventArgs e)
+        {
+            //this.gridInfo1.Visibility = Visibility.Visible;
+            this.metroAnimatedTabControl.Visibility = Visibility.Hidden;
+        }
+
+
+        private void button_Copy3_Click(object sender, RoutedEventArgs e)
+        {
+            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
+
+            if (item1 != null)
             {
-                string[] files = Directory.GetFiles(target_dir);
-                string[] dirs = Directory.GetDirectories(target_dir);
 
-                foreach (string file in files)
+                Object[] items2 = item1.Row.ItemArray;
+                // string item = items2[4].ToString();
+                //item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                //lvpkginfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
                 {
-                    File.SetAttributes(file, FileAttributes.Normal);
-                    File.Delete(file);
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+
+                    //lvpkginfo.Items.Add(t1[n] + t);
+                    if (n == 1)
+                    {
+                        string tid = t.Remove(0, 7);
+                        tid = tid.Remove(9, 20);
+                        textBoxud.Text = tid;
+                        buttonud.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
+                        metroAnimatedTabControl.SelectedValue = updtab;
+                    }
+                    n++;
                 }
-
-                foreach (string dir in dirs)
-                {
-                    DeleteDirectory(dir);
-                }
-
-                Directory.Delete(target_dir, false);
-            }
-            catch (Exception ex)
-            {
-
             }
         }
 
 
+        #endregion<<pkg_buttons>>
+
+        #region<<iso_buttons>>
 
         private void lbisotest_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
@@ -1810,6 +1948,60 @@ namespace PS3_Game_Tool
 
             }
         }
+
+
+        #endregion<<iso_buttons>>
+
+        #region<<game_buttons>>
+
+
+        private void lbgametest_SelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+
+            DataRowView item1 = this.lbgametest.SelectedItem as DataRowView;
+
+            if (item1 != null)
+            {
+
+                Object[] items2 = item1.Row.ItemArray;
+                string item = items2[4].ToString();
+                item = item.Replace(".PNG", ".PKG");
+                //this.label4.Content = items2[0].ToString();
+                lvgameinfo.Items.Clear();
+                int n = 0;
+                while (n < 4)
+                {
+                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
+                    //Object nob = items2[n];
+                    string t = items2[n].ToString();
+                    lvgameinfo.Items.Add(t1[n] + t);
+                    n++;
+                }
+
+                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
+
+
+
+                #region << PARAM.SFO >>
+                string path = appPath + @"\SFO\" + items2[0].ToString();
+               // path = path.Substring(0, path.Length - 3);
+                path = path + ".SFO";
+                //this code will always work ! 
+                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
+                lvgamesfo.Items.Clear();
+                foreach (var psfoitem in sfo.Tables)
+                {
+                    lvgamesfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
+                }
+
+                #endregion << PARAM.SFO >>
+
+
+            }
+        }
+
+
+        #endregion<<game_buttons>>
 
 
         private void plist_MouseEnter(object sender, System.Windows.Input.MouseEventArgs e)
@@ -1885,7 +2077,6 @@ namespace PS3_Game_Tool
             // lbtest.Focus();
         }
 
-
         private void plist_MouseExit(object sender, System.Windows.Input.MouseEventArgs e)
         {
             /*
@@ -1957,84 +2148,6 @@ namespace PS3_Game_Tool
             //string k = lbtest.SelectedItem
             //if (!lbtest.IsFocused)
             // lbtest.Focus();
-        }
-
-        private void button_Copy3_Click(object sender, RoutedEventArgs e)
-        {
-            DataRowView item1 = this.lbtest.SelectedItem as DataRowView;
-
-            if (item1 != null)
-            {
-
-                Object[] items2 = item1.Row.ItemArray;
-                // string item = items2[4].ToString();
-                //item = item.Replace(".PNG", ".PKG");
-                //this.label4.Content = items2[0].ToString();
-                //lvpkginfo.Items.Clear();
-                int n = 0;
-                while (n < 4)
-                {
-                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
-                    //Object nob = items2[n];
-                    string t = items2[n].ToString();
-
-                    //lvpkginfo.Items.Add(t1[n] + t);
-                    if (n == 1)
-                    {
-                        string tid = t.Remove(0, 7);
-                        tid = tid.Remove(9, 20);
-                        textBoxud.Text = tid;
-                        buttonud.RaiseEvent(new RoutedEventArgs(Button.ClickEvent));
-                        metroAnimatedTabControl.SelectedValue = updtab;
-                    }
-                    n++;
-                }
-            }
-        }
-
-        private void lbgametest_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-
-            DataRowView item1 = this.lbgametest.SelectedItem as DataRowView;
-
-            if (item1 != null)
-            {
-
-                Object[] items2 = item1.Row.ItemArray;
-                string item = items2[4].ToString();
-                item = item.Replace(".PNG", ".PKG");
-                //this.label4.Content = items2[0].ToString();
-                lvgameinfo.Items.Clear();
-                int n = 0;
-                while (n < 4)
-                {
-                    string[] t1 = new string[] { "Name: ", "CID:    ", "Type:  ", "Size:   " };
-                    //Object nob = items2[n];
-                    string t = items2[n].ToString();
-                    lvgameinfo.Items.Add(t1[n] + t);
-                    n++;
-                }
-
-                /*Please note you can always do this another methid just get the sfo somehow so we can work with it*/
-
-
-
-                #region << PARAM.SFO >>
-                string path = appPath + @"\SFO\" + items2[0].ToString();
-               // path = path.Substring(0, path.Length - 3);
-                path = path + ".SFO";
-                //this code will always work ! 
-                Param_SFO.PARAM_SFO sfo = new Param_SFO.PARAM_SFO(path);
-                lvgamesfo.Items.Clear();
-                foreach (var psfoitem in sfo.Tables)
-                {
-                    lvgamesfo.Items.Add(psfoitem.Name + " : " + psfoitem.Value);
-                }
-
-                #endregion << PARAM.SFO >>
-
-
-            }
         }
 
 

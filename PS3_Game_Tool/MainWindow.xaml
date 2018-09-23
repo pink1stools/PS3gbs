@@ -233,8 +233,8 @@
                                     
                                         <Border MouseEnter="plist_MouseEnter" MouseLeave="plist_MouseExit">
 
-                                        <StackPanel x:Name="plist" MouseLeftButtonDown="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
-                                            <mah:Badged  BadgePlacementMode="TopLeft"   Badge="{Binding Path=text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                        <StackPanel x:Name="plist"  ToolTip="{Binding tool }">
+                                            <mah:Badged  BadgePlacementMode="TopLeft"   Badge="{Binding text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
                                             
                                             <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                           </mah:Badged>
@@ -706,9 +706,9 @@
                             <ListBox.ItemTemplate>
                             <DataTemplate>
 
-                                <StackPanel x:Name="plist2"  MouseLeftButtonUp="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
+                                <StackPanel x:Name="plist2"  ToolTip="{Binding tool }">
 
-                                        <mah:Badged  BadgePlacementMode="TopLeft"   Badge="{Binding Path=text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                        <mah:Badged  BadgePlacementMode="TopLeft"  Badge="{Binding text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
 
                                             <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </mah:Badged>
@@ -1052,9 +1052,9 @@
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
 
-                                    <StackPanel x:Name="plist3"  MouseLeftButtonUp="StackPanel_MouseLeftButtonDown" ToolTip="{Binding tool }">
+                                    <StackPanel x:Name="plist3"   ToolTip="{Binding tool }">
 
-                                        <mah:Badged  BadgePlacementMode="TopLeft"   Badge="{Binding Path=text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
+                                        <mah:Badged  BadgePlacementMode="TopLeft" Badge="{Binding text1s}" HorizontalAlignment="Center" VerticalAlignment="Center" >
 
                                             <Image Height="100"  Width="100"  Source="{Binding icon}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </mah:Badged>
